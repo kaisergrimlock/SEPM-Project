@@ -18,6 +18,9 @@ initializePassport(
   id => users.find(user => user.id === id)
 )
 
+//Import mongodb
+const mongoConnect = require('./util/database')
+
 const users = []
 
 //Express views
@@ -88,5 +91,9 @@ function checkNotAuthenticated(req, res, next) {
   }
   next()
 }
+
+mongoConnect((client) => {
+  console.log(client)
+})
 
 app.listen(3000)
