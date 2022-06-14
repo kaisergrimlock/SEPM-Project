@@ -11,7 +11,6 @@ const passport = require('passport')//for login
 const flash = require('express-flash')//error display
 const session = require('express-session')
 const methodOverride = require('method-override')
-
 const initializePassport = require('./passport-config')
 initializePassport(
   passport,
@@ -21,8 +20,11 @@ initializePassport(
 
 const users = []
 
+//Express views
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
+
+//Login
 app.use(flash())
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -66,6 +68,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   }
 })
 
+//Logout
 app.delete('/logout', (req, res) => {
   req.logOut()
   res.redirect('/login')
