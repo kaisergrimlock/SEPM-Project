@@ -1,11 +1,22 @@
-const http = require('http');
-
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-const server = http.createServer(function rqListener(req, res){
-    console.log(req)
-});
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-server.listen(3000);
+app.get('/', (req, res) => {
+    res.render('index.ejs')
+})
+
+app.get('/register', (req, res) => {
+    res.render('register.ejs')
+})
+
+app.get('/login', (req, res) => {
+    res.render('login.ejs')
+})
+
+
+app.listen(3000);
