@@ -9,6 +9,9 @@ const app = express();
 
 const users = []
 
+//Import passport functions
+const initializePassport = require('./passport-config')
+
 //Declare view-engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
