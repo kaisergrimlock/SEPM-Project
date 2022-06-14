@@ -8,6 +8,11 @@
 </head>
 <body>
     <h1>Login</h1>
+    <!--Error message display-->
+    <% if (messages.error) {%>
+    <%= messages.error%> 
+    <%}%>
+    <!--Login form-->
     <form action="/login" method="post">
         <div>
             <label for="name">Name</label>
@@ -21,6 +26,7 @@
             <label for="name">Password</label>
             <input type="password" id="password" name="password" required>
         </div>
+        <button type="submit">Login</button>
     </form>
 </body>
 </html>

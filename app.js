@@ -1,54 +1,89 @@
-//Import express and body-parser
-const express = require('express');
-const bodyParser = require('body-parser');
+//Import env
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
-//Import bcrypt to encrypt password
-const bcrypt = require('bcrypt')
+//Import 3rd party libraries
+const express = require('express')//import express
+const app = express()
+const bcrypt = require('bcrypt')//for encryption of password
+const passport = require('passport')//for login
+const flash = require('express-flash')//error display
+const session = require('express-session')
+const methodOverride = require('method-override')
 
-const app = express();
+const initializePassport = require('./passport-config')
+initializePassport(
+  passport,
+  email => users.find(user => user.email === email),
+  id => users.find(user => user.id === id)
+)
 
 const users = []
 
-//Import passport functions
-const initializePassport = require('./passport-config')
+app.set('view-engine', 'ejs')
+app.use(express.urlencoded({ extended: false }))
+app.use(flash())
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(methodOverride('_method'))
 
-//Declare view-engine
-app.set('view engine', 'ejs');
-app.set('views', 'views');
-app.use(express.urlencoded({extended: false}))
-
-//Routers
-app.get('/', (req, res) => {
-    res.render('index.ejs')
+app.get('/', checkAuthenticated, (req, res) => {
+  res.render('index.ejs', { name: req.user.name })
 })
 
-app.get('/register', (req, res) => {
-    res.render('register.ejs')
+app.get('/login', checkNotAuthenticated, (req, res) => {
+  res.render('login.ejs')
 })
 
-app.post('/register', async (req, res) => {
-    try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        users.push({
-          id: Date.now().toString(),
-          name: req.body.name,
-          email: req.body.email,
-          password: hashedPassword
-        })
-        res.redirect('/login')
-    } catch {
-        res.redirect('/register')
-    }
-    console.log(users)
+app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}))
+
+app.get('/register', checkNotAuthenticated, (req, res) => {
+  res.render('register.ejs')
 })
 
-app.get('/login', (req, res) => {
-    res.render('login.ejs')
+app.post('/register', checkNotAuthenticated, async (req, res) => {
+  try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    users.push({
+      id: Date.now().toString(),
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword
+    })
+    res.redirect('/login')
+  } catch {
+    res.redirect('/register')
+  }
 })
 
-app.post('/login', (req, res, next) => {
-    res.render('login.ejs')
+app.delete('/logout', (req, res) => {
+  req.logOut()
+  res.redirect('/login')
 })
 
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
 
-app.listen(3000);
+  res.redirect('/login')
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect('/')
+  }
+  next()
+}
+
+app.listen(3000)
