@@ -92,8 +92,8 @@ function checkNotAuthenticated(req, res, next) {
   next()
 }
 
-mongoConnect((client) => {
-  console.log(client)
+mongoConnect(() => {
+
 })
 
 app.listen(3000)
