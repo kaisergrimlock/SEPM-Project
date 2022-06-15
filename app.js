@@ -79,12 +79,11 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   .then(result => {
     // console.log(result);
     console.log('Created Product');
-    res.redirect('/admin/products');
+    res.redirect('/login');
   })
   .catch(err => {
     console.log(err);
   })
-  res.redirect('/login')
   // try {
   //   const hashedPassword = await bcrypt.hash(req.body.password, 10)
   //   users.push({
