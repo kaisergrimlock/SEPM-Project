@@ -8,6 +8,8 @@ const express = require('express')//import express
 const app = express()
 const bcrypt = require('bcrypt')//for encryption of password
 const passport = require('passport')//for login
+const mongoose = require("mongoose")
+const passportLocalMongoose = require('passport-local-mongoose')
 const flash = require('express-flash')//error display
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -21,7 +23,16 @@ initializePassport(
 //Import mongodb
 const mongoConnect = require('./util/database')
 
+//Import user model
 const users = []
+User = require('./models/user')
+
+//Mongoose setters
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.connect("mongodb://localhost/auth_demo_app");
 
 //Express views
 app.set('view-engine', 'ejs')
