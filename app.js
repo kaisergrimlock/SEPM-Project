@@ -21,18 +21,18 @@ initializePassport(
 )
 
 //Import mongodb
-const mongoConnect = require('./util/database')
+// const mongoConnect = require('./util/database')
 
 //Import user model
 const users = []
-User = require('./models/user')
+// User = require('./models/user')
 
 //Mongoose setters
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect("mongodb://localhost/auth_demo_app");
+// mongoose.set('useNewUrlParser', true);
+// mongoose.set('useFindAndModify', false);
+// mongoose.set('useCreateIndex', true);
+// mongoose.set('useUnifiedTopology', true);
+// mongoose.connect("mongodb://localhost/auth_demo_app");
 
 //Express views
 app.set('view-engine', 'ejs')
@@ -102,9 +102,5 @@ function checkNotAuthenticated(req, res, next) {
   }
   next()
 }
-
-mongoConnect(() => {
-
-})
 
 app.listen(3000)
