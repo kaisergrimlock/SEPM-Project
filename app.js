@@ -20,12 +20,9 @@ initializePassport(
   id => users.find(user => user.id === id)
 )
 
-//Import mongodb
-// const mongoConnect = require('./util/database')
-
 //Import user model
 const users = []
-// User = require('./models/user')
+User = require('./models/user')
 
 //Mongoose setters
 // mongoose.set('useNewUrlParser', true);
@@ -68,18 +65,37 @@ app.get('/register', checkNotAuthenticated, (req, res) => {
 })
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10)
-    users.push({
-      id: Date.now().toString(),
-      name: req.body.name,
-      email: req.body.email,
-      password: hashedPassword
-    })
-    res.redirect('/login')
-  } catch {
-    res.redirect('/register')
-  }
+  const name = req.body.name
+  const email = req.body.email
+  const password = req.body.password
+  const user = new User({
+    name: name,
+    email: email,
+    password: password
+  })
+  user
+  .save()
+  .then(result => {
+    // console.log(result);
+    console.log('Created Product');
+    res.redirect('/admin/products');
+  })
+  .catch(err => {
+    console.log(err);
+  })
+  res.redirect('/login')
+  // try {
+  //   const hashedPassword = await bcrypt.hash(req.body.password, 10)
+  //   users.push({
+  //     id: Date.now().toString(),
+  //     name: req.body.name,
+  //     email: req.body.email,
+  //     password: hashedPassword
+  //   })
+  //   res.redirect('/login')
+  // } catch {
+  //   res.redirect('/register')
+  // }
 })
 
 //Logout
@@ -102,5 +118,12 @@ function checkNotAuthenticated(req, res, next) {
   }
   next()
 }
+
+//Connect to Mongoose
+mongoose.connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority').then(result => {
+  console.log('Connected')
+}).catch(err => {
+  console.log(err)
+})
 
 app.listen(3000)

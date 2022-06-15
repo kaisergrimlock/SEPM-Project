@@ -1,11 +1,20 @@
-const db = require('../util/database').getDB
+const mongoose = require('mongoose')
 
-class User{
-    constructor(username, email, password){
-        this.name = username
-        this.email = email
-        this.password = password
+const Schema = mongoose.Schema
+
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
     }
+})
 
-
-}
+module.exports = mongoose.model('User', userSchema)
