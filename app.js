@@ -28,16 +28,16 @@ const store = new MongoDBStore({
 app.use(session({secret: 'SEPM', resave: false, saveUninitialized: false, store: store}))
 
 //Controllers & Routers
-app.get('/', (req, res) => {
+app.get('/', checkAuthenticated, (req, res) => {
   res.render('index.ejs')
 })
 
 //Login
-app.get('/login', (req, res) => {
+app.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs')
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', checkNotAuthenticated, (req, res) => {
   const email = req.body.email
   const password = req.body.password
   //If password exists
@@ -71,11 +71,11 @@ app.post('/login', (req, res) => {
 })
 
 //Register
-app.get('/register', (req, res) => {
+app.get('/register', checkNotAuthenticated, (req, res) => {
   res.render('register.ejs')
 })
 
-app.post('/register', async (req, res) => {
+app.post('/register', checkNotAuthenticated, async (req, res) => {
   const name = req.body.name
   const email = req.body.email
   const hashedPassword = await bcrypt.hash(req.body.password, 10)//Hash password
@@ -96,6 +96,21 @@ app.post('/register', async (req, res) => {
     console.log(err);
   })
 })
+
+function checkAuthenticated(req, res, next) {
+  if (req.session.isLoggedIn) {
+    return next()
+  }
+
+  res.redirect('/login')
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.session.isLoggedIn) {
+    return res.redirect('/')
+  }
+  next()
+}
 
 //Connect to Mongoose
 mongoose.connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority').then(result => {
