@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
   res.render('index.ejs')
 })
 
+//Login
 app.get('/login', (req, res) => {
   res.render('login.ejs')
 })
@@ -48,16 +49,17 @@ app.post('/login', (req, res) => {
     //Check password match
     bcrypt.compare(password, user.password).then(doMatch => {
       if(doMatch) {
-        //Return to homepage
+        //Login successful
         console.log('Login success')
+        //Store session information onto MongoDB
         req.session.isLoggedIn = true
         req.session.user = user
         return req.session.save(err => {
           console.log(err)
+          //Redirect back to homepage
           console.log('Redirected')
           res.redirect('/')
         })
-        // return res.redirect('/')
       }else{
         console.log('Wrong password')
         return res.redirect('/login')
@@ -68,6 +70,7 @@ app.post('/login', (req, res) => {
   })
 })
 
+//Register
 app.get('/register', (req, res) => {
   res.render('register.ejs')
 })
