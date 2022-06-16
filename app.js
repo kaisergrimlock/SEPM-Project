@@ -11,7 +11,7 @@ const express = require('express')//import express
 const app = express()
 const bcrypt = require('bcrypt')//for encryption of password
 const mongoose = require("mongoose")
-const flash = require('express-flash')//error display
+const flash = require('connect-flash')//error display
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 
@@ -27,6 +27,9 @@ const store = new MongoDBStore({
 })
 app.use(session({secret: 'SEPM', resave: false, saveUninitialized: false, store: store}))
 
+//Flash middleware
+app.use(flash())
+
 //Controllers & Routers
 app.get('/', checkAuthenticated, (req, res) => {
   res.render('index.ejs')
@@ -34,7 +37,7 @@ app.get('/', checkAuthenticated, (req, res) => {
 
 //Login
 app.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login.ejs')
+  res.render('login.ejs', {error: req.flash('error')})
 })
 
 app.post('/login', checkNotAuthenticated, (req, res) => {
@@ -44,6 +47,7 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
   User.findOne({email: email}).then(user => {
     if(!user) {
       console.log('No such user')
+      req.flash('error', 'Invalid email or password')
       return res.redirect('/login')
     }
     //Check password match
@@ -62,6 +66,7 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
         })
       }else{
         console.log('Wrong password')
+        req.flash('error', 'Invalid email or password')
         return res.redirect('/login')
       }
     }).catch(err => {
@@ -97,6 +102,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   })
 })
 
+//Check authentication to load pages
 function checkAuthenticated(req, res, next) {
   if (req.session.isLoggedIn) {
     return next()
