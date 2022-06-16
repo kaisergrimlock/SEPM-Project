@@ -78,7 +78,8 @@ app.get('/register', (req, res) => {
 app.post('/register', async (req, res) => {
   const name = req.body.name
   const email = req.body.email
-  const hashedPassword = await bcrypt.hash(req.body.password, 10)
+  const hashedPassword = await bcrypt.hash(req.body.password, 10)//Hash password
+  //Store user info onto MongoDB
   const user = new User({
     name: name,
     email: email,
