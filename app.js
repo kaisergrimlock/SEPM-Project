@@ -10,12 +10,9 @@ User = require('./models/user')
 const express = require('express')//import express
 const app = express()
 const bcrypt = require('bcrypt')//for encryption of password
-const passport = require('passport')//for login
 const mongoose = require("mongoose")
-const passportLocalMongoose = require('passport-local-mongoose')
 const flash = require('express-flash')//error display
 const session = require('express-session')
-const methodOverride = require('method-override')
 
 //Express views
 app.set('view-engine', 'ejs')
@@ -23,7 +20,7 @@ app.use(express.urlencoded({ extended: false }))
 
 //Controllers & Routers
 app.get('/', (req, res) => {
-  res.render('index.ejs', { name: req.user.name })
+  res.render('index.ejs')
 })
 
 app.get('/login', (req, res) => {
@@ -33,20 +30,25 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
   const email = req.body.email
   const password = req.body.password
+  //If password exists
   User.findOne({email: email}).then(user => {
     if(!user) {
       console.log('No such user')
       return res.redirect('/login')
     }
+    //Check password match
     bcrypt.compare(password, user.password).then(doMatch => {
       if(doMatch) {
+        //Return to homepage
         console.log('Login success')
-        req.session.isLoggedIn = true
-        req.session.user = user
-        return req.session.save(err => {
-          console.log(err)
-          res.redirect('/')
-        })
+        return res.redirect('/')
+        // req.session.isLoggedIn = true
+        // req.session.user = user
+        // return req.session.save(err => {
+        //   console.log(err)
+        //   console.log('Redirected')
+        //   res.redirect('/')
+        // })
       }else{
         console.log('Wrong password')
         return res.redirect('/login')
@@ -74,7 +76,7 @@ app.post('/register', async (req, res) => {
   .save()
   .then(result => {
     // console.log(result);
-    console.log('Created Product');
+    console.log('Created User');
     res.redirect('/login');
   })
   .catch(err => {
