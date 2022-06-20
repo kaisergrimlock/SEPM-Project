@@ -78,7 +78,6 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
 
 //Register
 app.get('/register', checkNotAuthenticated, async (req, res) => {
-  console.log(req.session.user.name)
   res.render('register.ejs',)
 })
 
