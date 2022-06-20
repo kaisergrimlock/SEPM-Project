@@ -32,7 +32,8 @@ app.use(flash())
 
 //Controllers & Routers
 app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index.ejs')
+  const name = req.session.user.name
+  res.render('index.ejs', {name: name})
 })
 
 //Login
@@ -76,8 +77,9 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
 })
 
 //Register
-app.get('/register', checkNotAuthenticated, (req, res) => {
-  res.render('register.ejs')
+app.get('/register', checkNotAuthenticated, async (req, res) => {
+  console.log(req.session.user.name)
+  res.render('register.ejs',)
 })
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
@@ -117,6 +119,16 @@ function checkNotAuthenticated(req, res, next) {
   }
   next()
 }
+
+//Logout functionalities
+app.post('/logout', async (req, res) => {
+  req.session.destroy(err => {
+    console.log(err)
+    console.log('logged out')
+    res.redirect('/')
+  })
+
+})
 
 //Connect to Mongoose
 mongoose.connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority').then(result => {
