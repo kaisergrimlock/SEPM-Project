@@ -8,6 +8,12 @@
 </head>
 <body>
     <h1>Register</h1>
+    <!--Error Message-->
+    <div class="error">
+        <% if(error){ %>
+        <%= error %>
+        <% } %>
+    </div>
     <!--Register form-->
     <form action="/register" method="POST">
         <div>

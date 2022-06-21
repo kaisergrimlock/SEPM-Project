@@ -78,13 +78,21 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
 
 //Register
 app.get('/register', checkNotAuthenticated, async (req, res) => {
-  res.render('register.ejs',)
+  res.render('register.ejs', {error: req.flash('error')})
 })
 
 app.post('/register', checkNotAuthenticated, async (req, res) => {
   const name = req.body.name
   const email = req.body.email
   const hashedPassword = await bcrypt.hash(req.body.password, 10)//Hash password
+
+  User.findOne({email: email}).then(user => {
+    if(user){
+      req.flash('error', 'Duplicate email')
+      res.redirect('/register')
+    }
+  })
+
   //Store user info onto MongoDB
   const user = new User({
     name: name,
