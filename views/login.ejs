@@ -9,6 +9,11 @@
 <body>
     <h1>Login</h1>
     <!--Login form-->
+    <div class="error">
+        <% if(error){ %>
+        <%= error %>
+        <% } %>
+    </div>
     <form action="/login" method="post">
         <div>
             <label for="name">Email</label>
