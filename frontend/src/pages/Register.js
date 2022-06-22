@@ -1,15 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import RegisterForm from '../components/RegisterForm'
 
 function Register() {
-    const [users, setUsers] = useState([])
-    const onAddUser = (user) => {
-        setUsers([...users, user])
-    }
   return (
-    <div>
-        <h1>Register</h1>
-        <RegisterForm onAddUser={onAddUser}/>
+    <div className='w-full h-screen flex justify-center items-center sm:px-0 px-5'>
+        <RegisterForm/>
     </div>
   )
 }
