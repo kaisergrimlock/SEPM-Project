@@ -52,7 +52,7 @@ function RegisterForm() {
         <h1 className=" font-bold pt-3 pb-1 text-2xl inline-block border-b-4 border-black">Register</h1>
 
         <div className="my-3">
-          <label htmlFor="name" className=" font-semibold">Name:</label>
+          <label htmlFor="name" className="font-semibold">Name:</label>
           <input
             type="text"
             id="name"
