@@ -9,7 +9,7 @@ User = require('./models/user')
 //Import 3rd party libraries
 const express = require('express')//import express
 const app = express()
-const bcrypt = require('bcrypt')//for encryption of password
+const bcrypt = require('bcryptjs')//for encryption of password
 const mongoose = require("mongoose")
 const flash = require('connect-flash')//error display
 const session = require('express-session')
