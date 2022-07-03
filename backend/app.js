@@ -14,6 +14,7 @@ const mongoose = require("mongoose")
 const flash = require('connect-flash')//error display
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
+const qrcode = require('qrcode')
 
 //Express views
 app.set('view-engine', 'ejs')
@@ -72,6 +73,21 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
       }
     }).catch(err => {
       return res.redirect('/login')
+    })
+  })
+})
+
+//QR Code
+app.get('/qrcode', checkNotAuthenticated, async(req, res) => {
+  res.render('qrcode.ejs')
+})
+
+app.post('/scan', checkNotAuthenticated, async(req, res) => {
+  const input_text = req.body.text
+  console.log(input_text)
+  qrcode.toDataURL(input_text, (err, src) => {
+    res.render('scan.ejs', {
+      qr_code: src, 
     })
   })
 })
