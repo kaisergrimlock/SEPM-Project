@@ -1,23 +1,28 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-
+import React from "react";
+import { Link } from "react-router-dom";
+import Menu from "./Menu";
 function Navbar() {
-  return (
-    <header className='header w-full h-auto'>
-        <nav className='navbar flex justify-between text-lg py-5'>
-            <div className='logo'>
-                <Link to="/"><img src='' alt='logo'/></Link> 
-            </div>
+  const changeNavBackground = () => {
+    if (window.scrollY > 0) {
+      document.getElementById("desktop-navbar").style.backgroundColor = "white";
+    } else {
+      document.getElementById("desktop-navbar").style.backgroundColor ="transparent";
+    }
+  };
 
-            <div className='menu'>
-                <ul className='flex'>
-                    <li className='mx-3'><Link to="/login" className='hover:text-blue-500'>Login</Link></li>
-                    <li className='mx-3'><Link to="/register" className='hover:text-blue-500'>Register</Link></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-  )
+  window.addEventListener("scroll", changeNavBackground);
+
+  return (
+    <nav className="navbar sm:flex justify-between text-lg py-0 fixed w-full hidden duration-300" id="desktop-navbar">
+      <div className="logo px-5">
+        <Link to="/">
+          <img src="" alt="logo" />
+        </Link>
+      </div>
+
+      <Menu />
+    </nav>
+  );
 }
 
-export default Navbar
+export default Navbar;

@@ -42,7 +42,7 @@ function RegisterForm() {
   };
 
   return (
-    <div className="sm:w-1/2 w-full h-auto border border-black rounded-md">
+    <div className="sm:w-1/2 w-full h-auto border border-black rounded-md bg-white">
       <form
         action="/register"
         method="POST"

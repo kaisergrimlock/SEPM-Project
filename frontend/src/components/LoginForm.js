@@ -33,14 +33,7 @@ function LoginForm() {
   //   },
   // };
   return (
-    <div className='border border-black py-5 px-10 rounded-lg'>
-    {/* <!--Error Message-->
-    <div class="error">
-        <% if(error){ %>
-        <%= error %>
-        <% } %>
-    </div>
-    <!--Login form--> */}
+    <div className='border border-black py-5 px-10 rounded-lg bg-white'>
       <form action="/login" method="post">
       <h1 className='pt-3 pb-1 text-2xl font-bold border-b-4 border-black inline-block w-fit'>Login</h1>
           <div className='my-3'>

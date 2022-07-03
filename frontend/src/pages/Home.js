@@ -1,11 +1,14 @@
 import React from 'react'
+import Header from '../components/Header'
 import Navbar from '../components/Navbar'
 
 function Home() {
   return (
     <>
-        <Navbar />
-        Home
+        <Header />
+        <main className='main my-20'>
+          Home
+        </main> 
     </>
   )
 }
