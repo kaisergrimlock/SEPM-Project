@@ -1,3 +1,7 @@
+const express = require('express')//import express
+const app = express()
+const cors = require('cors');
+app.use(cors({origin:'*'}))
 //Import env
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -7,8 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 User = require('./models/user')
 
 //Import 3rd party libraries
-const express = require('express')//import express
-const app = express()
+
 const bcrypt = require('bcryptjs')//for encryption of password
 const mongoose = require("mongoose")
 const flash = require('connect-flash')//error display

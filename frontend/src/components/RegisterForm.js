@@ -1,15 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
 function RegisterForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const registerHandler = (data) => {
-    console.log(data);
+
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const registerHandler = async (data) => {
+    setValues({
+      ...values,
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    });
+    const { name, email, password } = data;
+    const registerNewUser = { name, email, password };
+    try {
+      data = await axios.post(`http://localhost:8080/register`, registerNewUser);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const registerValidation = {
@@ -49,10 +68,14 @@ function RegisterForm() {
         onSubmit={handleSubmit(registerHandler)}
         className="px-5 py-3"
       >
-        <h1 className=" font-bold pt-3 pb-1 text-2xl inline-block border-b-4 border-black">Register</h1>
+        <h1 className=" font-bold pt-3 pb-1 text-2xl inline-block border-b-4 border-black">
+          Register
+        </h1>
 
         <div className="my-3">
-          <label htmlFor="name" className="font-semibold">Name:</label>
+          <label htmlFor="name" className="font-semibold">
+            Name:
+          </label>
           <input
             type="text"
             id="name"
@@ -60,11 +83,15 @@ function RegisterForm() {
             placeholder="E.g: An"
             {...register("name", registerValidation.name)}
           />
-          <span className="text-red-500">{errors.name && errors.name.message}</span>
+          <span className="text-red-500">
+            {errors.name && errors.name.message}
+          </span>
         </div>
 
         <div className="my-3">
-          <label htmlFor="email" className=" font-semibold">Email:</label>
+          <label htmlFor="email" className=" font-semibold">
+            Email:
+          </label>
           <input
             type="email"
             id="email"
@@ -72,11 +99,15 @@ function RegisterForm() {
             placeholder="E.g: example@gmail.com"
             {...register("email", registerValidation.email)}
           />
-          <span className="text-red-500">{errors.email && errors.email.message}</span>
+          <span className="text-red-500">
+            {errors.email && errors.email.message}
+          </span>
         </div>
 
         <div className="my-3">
-          <label htmlFor="password" className=" font-semibold">Password:</label>
+          <label htmlFor="password" className=" font-semibold">
+            Password:
+          </label>
           <input
             type="password"
             id="password"
@@ -84,16 +115,29 @@ function RegisterForm() {
             placeholder="Enter your password"
             {...register("password", registerValidation.password)}
           />
-          <span className="text-red-500">{errors.password && errors.password.message}</span>  
+          <span className="text-red-500">
+            {errors.password && errors.password.message}
+          </span>
         </div>
 
         <div className="pt-3 pb-6 border-b border-gray-300">
-        <button type="submit" className=" bg-black text-white w-full h-[42px] rounded-md">
-          Register
-        </button>
+          <button
+            type="submit"
+            className=" bg-black text-white w-full h-[42px] rounded-md"
+          >
+            Register
+          </button>
         </div>
-        
-        <p className="my-3">Have an account? <Link to="/login" className="text-blue-700 underline hover:opacity-50 duration-300">Log in now</Link></p>
+
+        <p className="my-3">
+          Have an account?{" "}
+          <Link
+            to="/login"
+            className="text-blue-700 underline hover:opacity-50 duration-300"
+          >
+            Log in now
+          </Link>
+        </p>
       </form>
     </div>
   );
