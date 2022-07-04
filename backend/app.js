@@ -2,6 +2,7 @@ const express = require('express')//import express
 const app = express()
 const cors = require('cors');
 app.use(cors({origin:'*'}))
+app.use(express.json({ limit: '10kb' }));
 //Import env
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
