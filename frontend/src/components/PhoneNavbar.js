@@ -6,6 +6,10 @@ import SidebarMenu from "./SidebarMenu";
 function PhoneNavbar() {
   let [menuBtn, setMenuBtn] = useState(0);
 
+  const changePage = () => {
+    document.getElementById("body").style.backgroundColor = "rgb(110 231 183)"
+  }
+
   const handleDisplayMenu = () => {
     menuBtn++;
     setMenuBtn(menuBtn);
@@ -28,7 +32,7 @@ function PhoneNavbar() {
       <div id="phone-navbar">
         <div className="phone-navbar-btn flex justify-between text-lg py-5 w-full bg-white border-b-2 border-b-black">
           <div className="logo px-5">
-            <Link to="/">
+            <Link to="/" onClick={changePage}>
               <img src="" alt="logo" />
             </Link>
           </div>

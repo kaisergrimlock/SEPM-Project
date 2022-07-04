@@ -105,6 +105,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   const email = req.body.email
   const hashedPassword = await bcrypt.hash(req.body.password, 10)//Hash password
 
+  console.log(name, email, hashedPassword)
   User.findOne({email: email}).then(user => {
     if(user){
       req.flash('error', 'Duplicate email')

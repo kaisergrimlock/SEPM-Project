@@ -7,7 +7,7 @@ import About from './pages/About';
 
 function App() {
   return (
-    <div className='w-full h-screen overflow-hidden bg-emerald-300 duration-300' id='body'>
+    <div className='w-full h-[500vh] overflow-hidden bg-emerald-300 duration-300' id='body'>
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Home />}/>
