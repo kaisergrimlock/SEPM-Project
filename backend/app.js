@@ -198,10 +198,20 @@ app.post('/upload', (req, res) => {
 
 
 //Connect to Mongoose
-mongoose.connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority').then(result => {
-  console.log('Connected')
-}).catch(err => {
-  console.log(err)
-})
+
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
+
+// mongoose.connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority').then(result => {
+//   console.log('Connected')
+// }).catch(err => {
+//   console.log(err)
+// })
 
 app.listen(8080)
