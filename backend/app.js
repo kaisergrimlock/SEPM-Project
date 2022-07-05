@@ -55,31 +55,35 @@ app.post('/login', checkNotAuthenticated, (req, res) => {
   //If password exists
   User.findOne({email: email}).then(user => {
     if(!user) {
-      console.log('No such user')
-      req.flash('error', 'Invalid email or password')
-      return res.redirect('/login')
+      // console.log('No such user')
+      // req.flash('error', 'Invalid email or password')
+      // return res.redirect('/login')
+      return res.status(401).send({message: 'Invalid email or password'})
     }
     //Check password match
     bcrypt.compare(password, user.password).then(doMatch => {
       if(doMatch) {
         //Login successful
-        console.log('Login success')
+        // console.log('Login success')
+        res.status(202).send({message: 'Login success'})
         //Store session information onto MongoDB
         req.session.isLoggedIn = true
         req.session.user = user
         return req.session.save(err => {
           console.log(err)
           //Redirect back to homepage
-          console.log('Redirected')
-          res.redirect('/')
+          // console.log('Redirected')
+          // res.redirect('/')
         })
       }else{
-        console.log('Wrong password')
-        req.flash('error', 'Invalid email or password')
-        return res.redirect('/login')
+        // console.log('Wrong password')
+        // req.flash('error', 'Invalid email or password')
+        // return res.redirect('/login')
+        res.status(401).send({message: 'Invalid email or password'})
       }
     }).catch(err => {
-      return res.redirect('/login')
+      // return res.redirect('/login')
+      res.status(500).send({message: 'Internal Server Error'})
     })
   })
 })
@@ -112,8 +116,9 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   console.log(name, email, hashedPassword)
   User.findOne({email: email}).then(user => {
     if(user){
-      req.flash('error', 'Duplicate email')
-      res.redirect('/register')
+      // req.flash('error', 'Duplicate email')
+      // res.redirect('/register')
+      return res.status(401).send({message: "Duplicate email"})
     }
   })
 
@@ -127,11 +132,13 @@ app.post('/register', checkNotAuthenticated, async (req, res) => {
   .save()
   .then(result => {
     // console.log(result);
-    console.log('Created User');
-    res.redirect('/login');
+    // console.log('Created User');
+    // res.redirect('/login');
+    res.status(200).send({message: "Created User"})
   })
   .catch(err => {
     console.log(err);
+    res.status(500).send({message: "Internal Server error"})
   })
 })
 

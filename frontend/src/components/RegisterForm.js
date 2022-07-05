@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, na, useNavigate } from "react-router-dom";
 import axios from "axios";
 function RegisterForm() {
   const {
@@ -9,15 +9,18 @@ function RegisterForm() {
     formState: { errors },
   } = useForm();
 
-  const [values, setValues] = useState({
+  const [user, setUser] = useState({
     name: "",
     email: "",
     password: "",
   });
 
+  const [error, setError] = useState("")
+  const navigate = useNavigate()
+
   const registerHandler = async (data) => {
-    setValues({
-      ...values,
+    setUser({
+      ...user,
       name: data.name,
       email: data.email,
       password: data.password,
@@ -25,9 +28,24 @@ function RegisterForm() {
     const { name, email, password } = data;
     const registerNewUser = { name, email, password };
     try {
-      data = await axios.post(`http://localhost:8080/register`, registerNewUser);
+      await axios.post(`http://localhost:8080/register`, registerNewUser).then(res => {
+        console.log(res.message)
+        setUser({
+          ...user,
+          name: data.name,
+          email: data.email,
+          password: data.password,
+        });
+        navigate("/login")
+      });
     } catch (error) {
-      console.log(error);
+      if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				setError(error.response.data.message);
+			}
     }
   };
 
@@ -38,6 +56,10 @@ function RegisterForm() {
         value: 10,
         message: "* Name length must be lower than 10",
       },
+      pattern:{
+        value: /^[A-Za-z]+$/,
+        message: "* Invalid name"
+      }
     },
     email: {
       required: "* Email is required",
@@ -68,6 +90,7 @@ function RegisterForm() {
         onSubmit={handleSubmit(registerHandler)}
         className="px-5 py-3"
       >
+        {error && <p className="text-red-600">{error}</p>}
         <h1 className=" font-bold pt-3 pb-1 text-2xl inline-block border-b-4 border-black">
           Register
         </h1>

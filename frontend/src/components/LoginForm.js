@@ -1,40 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {useForm} from "react-hook-form";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import axios from 'axios';
 function LoginForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const loginHandler = (data) => {
-    console.log(data);
+
+  const [error, setError] = useState("")
+
+  const navigate = useNavigate();
+
+  const loginHandler = async(data) => {
+    try {
+			await axios.post(`http://localhost:8080/login`, data).then(res => {
+        localStorage.setItem("token", res.data);
+			  navigate("/") ;
+      });
+		} catch (error) {
+			if (
+				error.response &&
+				error.response.status >= 400 &&
+				error.response.status <= 500
+			) {
+				setError(error.response.data.message);
+			}
+		}
   };
 
-  // const loginValidation = {
-  //   email: {
-  //     required: "* Email is required",
-  //     pattern: {
-  //       value:
-  //         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-  //       message: "* Invalid email",
-  //     },
-  //   },
-  //   password: {
-  //     required: "* Password is required",
-  //     minLength: {
-  //       value: 8,
-  //       message: "* Wrong password. Please check again!",
-  //     },
-  //     pattern: {
-  //       value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-  //       message: "* Invalid password",
-  //     },
-  //   },
-  // };
   return (
     <div className='border border-black py-5 px-10 rounded-lg bg-white'>
-      <form action="/login" method="post">
+      <form action="/login" method="post" onSubmit={handleSubmit(loginHandler)}>
       <h1 className='pt-3 pb-1 text-2xl font-bold border-b-4 border-black inline-block w-fit'>Login</h1>
           <div className='my-3'>
               <label htmlFor="email" className='font-semibold'>Username: </label>
@@ -46,6 +44,7 @@ function LoginForm() {
               <input type="password" id="password" name="password" required placeholder='Enter your password'/>
           </div>
 
+          {error && <div className='text-red-500'>{error}</div>}
           <div className='login-btn pt-3 pb-6 border-b'>
             <button type="submit" className='w-full bg-black h-[42px] text-white rounded-lg'>Login</button>
           </div>
