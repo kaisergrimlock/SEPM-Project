@@ -170,8 +170,17 @@ const fileStorage = multer.diskStorage({
   }
 })
 
+//File Filter
+const fileFilter =  (req, file, cb) => {
+  if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg'){
+    cb(null, true)
+  }else{
+    cb(null, false)
+  }
+}
+
 //Storage
-app.use(multer({storage: fileStorage}).single('image'))
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'))
 
 //Upload image
 app.post('/upload', (req, res) => {
