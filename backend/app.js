@@ -1,12 +1,15 @@
 const express = require('express')//import express
 const app = express()
-const cors = require('cors');
+const cors = require('cors')
 app.use(cors({origin:'*'}))
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: '10kb' }))
 //Import env
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
+
+//Import multer
+const multer = require('multer')
 
 //Import user model
 User = require('./models/user')
@@ -155,8 +158,28 @@ app.post('/logout', async (req, res) => {
     console.log('logged out')
     res.redirect('/')
   })
-
 })
+
+//Storage Engine
+const fileStorage = multer.diskStorage({
+  destination: (req, res, cb) => {
+    cb(null, 'images')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname)
+  }
+})
+
+//Storage
+app.use(multer({storage: fileStorage}).single('image'))
+
+//Upload image
+app.post('/upload', (req, res) => {
+  const imagefile = req.file
+  console.log("Image:"+ imagefile)
+  res.redirect('/')
+})
+
 
 //Connect to Mongoose
 mongoose.connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority').then(result => {
