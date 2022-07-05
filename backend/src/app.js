@@ -20,7 +20,7 @@ const { globalErrorHandler } = require('./middlewares');
 const { QrCodeRouter, AuthRouter } = require('./routers');
 
 // Express views
-app.set('view-engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
 
 // Session middleware
@@ -76,7 +76,7 @@ app.use('/api/v1/qrCode', QrCodeRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.use('*', (req, res, next) => {
-  next(ResponseService.newError(Error.UrlNotFound.errorCode, Error.UrlNotFound.message));
+  next(ResponseService.newError(Error.UrlNotFound.errCode, Error.UrlNotFound.errMessage));
 });
 
 // error handling middleware
@@ -87,7 +87,7 @@ app.use(globalErrorHandler);
 mongoose
   .connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority')
   .then((result) => {
-    console.log(`Connected ${result}`);
+    console.log(`Connected`);
   })
   .catch((err) => {
     console.log(err);

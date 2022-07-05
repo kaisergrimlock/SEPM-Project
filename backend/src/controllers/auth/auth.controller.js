@@ -14,7 +14,7 @@ const createUser = catchAsync(async (req, res) => {
 const validateUser = catchAsync(async (req, res) => {
   const user = await AuthService.getUserById(req, res);
   if (!user) {
-    throw ResponseService.newError(Error.UserNotFound.statusCode, Error.UserNotFound.errorCode, Error.UserNotFound.message);
+    throw ResponseService.newError(Error.UserNotFound.errCode, Error.UserNotFound.errMessage);
   }
 
   res.render('home', { user });

@@ -5,9 +5,8 @@ const ResponseService = require('../response/response.service');
 const createUser = async (userBody) => {
   const user = await UserModel.create(userBody);
 
-  // ResponseService.throwError(
-  //   Error.PasswordInvalid.statusCode,
-  //   Error.PasswordInvalid.errorCode,
+  // throw ResponseService.newError(
+  //   Error.PasswordInvalid.errCode,
   //   Error.PasswordInvalid.message
   // );
   return user;

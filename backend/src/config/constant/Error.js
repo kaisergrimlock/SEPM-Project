@@ -3,36 +3,36 @@ const httpStatus = require('http-status');
 const Error = {
   // 100++ Error from info of the client
   UrlNotFound: {
-    errorCode: 100,
-    message: 'Request URL not found',
+    errCode: 100,
+    errMessage: 'Request URL not found',
   },
 
   UserNameInvalid: {
-    errorCode: 101,
-    message: 'Username is invalid',
+    errCode: 101,
+    errMessage: 'Username is invalid',
   },
   PasswordInvalid: {
-    errorCode: 102,
-    message: 'Password is invalid',
+    errCode: 102,
+    errMessage: 'Password is invalid',
   },
   UserNotFound: {
-    errorCode: 103,
-    message: 'User not  found',
+    errCode: 103,
+    errMessage: 'User not  found',
   },
 
   QrInvalid: {
-    errorCode: 104,
-    message: 'qrCode not valid',
+    errCode: 104,
+    errMessage: 'qrCode not valid',
   },
 
   // 200++ Error from Db
   CastError: {
-    errorCode: 201,
-    message: 'Cast field error',
+    errCode: 201,
+    errMessage: 'Cast field error',
   },
   DuplicateFieldError: {
-    errorCode: 202,
-    message: 'Duplicate field error',
+    errCode: 202,
+    errMessage: 'Duplicate field error',
   },
 
   // 300++ Error from Third Party
@@ -40,8 +40,8 @@ const Error = {
   // 400++ Error from Internal Server
   GenericError: {
     statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-    errorCode: 400,
-    message: 'Something wrong happened.',
+    errCode: 400,
+    errMessage: 'Something wrong happened.',
   },
 };
 

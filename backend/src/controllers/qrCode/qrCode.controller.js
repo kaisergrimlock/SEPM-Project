@@ -7,12 +7,14 @@ const redirect = (req, res) => {
 };
 
 const scanQr = catchAsync(async (req, res) => {
-  const inputText = req.body.text;
+  const inputText = '123';
   const src = await QrCodeService.scanQr(inputText);
 
   if (!src) {
-    throw ResponseService.newError(Error.QrInvalid.errorCode, Error.QrInvalid.message);
+    throw ResponseService.newError(Error.QrInvalid.errCode, Error.QrInvalid.errMessage);
   }
+
+  // res.status(200).json(ResponseService.newSucess());
 
   res.render('scan.ejs', {
     qr_code: src,
