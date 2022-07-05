@@ -8,6 +8,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const mongoose = require('mongoose');
+const multer = require('multer');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const path = require('path');
@@ -81,6 +82,9 @@ app.use('*', (req, res, next) => {
 
 // error handling middleware
 app.use(globalErrorHandler);
+
+// Use multer for image
+app.use(multer().single('image'));
 
 // running
 // Connect to Mongoose
