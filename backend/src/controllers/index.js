@@ -3,5 +3,6 @@
 // for example: respond back to the client, redirect, rendering
 const QrCodeController = require('./qrCode/qrCode.controller');
 const AuthController = require('./auth/auth.controller');
+const ImageUploaderController = require('./imageUpload/imgUpload.controller')
 
-module.exports = { QrCodeController, AuthController };
+module.exports = { QrCodeController, AuthController, ImageUploaderController };

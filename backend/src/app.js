@@ -18,7 +18,9 @@ const path = require('path');
 const { ResponseService } = require('./services');
 const Error = require('./config/constant/Error');
 const { globalErrorHandler } = require('./middlewares');
-const { QrCodeRouter, AuthRouter } = require('./routers');
+const { QrCodeRouter, AuthRouter, ImgRouter } = require('./routers');
+const fileStorage = require('./config/constant/fileStorage');
+const { imgTypeValidator } = require("./utils")
 
 // Express views
 app.set('views', path.join(__dirname, 'views'));
@@ -70,10 +72,14 @@ app.use(mongoSanitize()); // filter out the dollar signs protect from  query inj
 // Data sanitization against XSS
 app.use(xss()); // protect from molision code coming from html
 
+//Storage
+app.use(multer({storage: fileStorage, fileFilter: imgTypeValidator}).single('image'))
+
 // Use specific Router to handle each end point
 app.use('/api/v1', AuthRouter);
-app.use('/api/v1', AuthRouter);
 app.use('/api/v1/qrCode', QrCodeRouter);
+app.use('/api/v1/uploadImage', ImgRouter);
+
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.use('*', (req, res, next) => {
@@ -82,9 +88,6 @@ app.use('*', (req, res, next) => {
 
 // error handling middleware
 app.use(globalErrorHandler);
-
-// Use multer for image
-app.use(multer().single('image'));
 
 // running
 // Connect to Mongoose

@@ -3,5 +3,6 @@
 // also the place where Browser will send request to first
 const QrCodeRouter = require('./qrCode/qrCode.router');
 const AuthRouter = require('./auth/auth.router');
+const ImgRouter = require('./imageUpload/imageUpload.router');
 
-module.exports = { QrCodeRouter, AuthRouter };
+module.exports = { QrCodeRouter, AuthRouter, ImgRouter };
