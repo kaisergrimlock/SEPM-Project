@@ -101,6 +101,7 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
+console.log(process.env.DATABASE_URI)
 
 const server = app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
