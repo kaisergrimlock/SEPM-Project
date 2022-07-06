@@ -16,8 +16,8 @@ function LoginForm() {
   const loginHandler = async(data) => {
     try {
 			await axios.post(`http://localhost:8080/login`, data).then(res => {
-        localStorage.setItem("token", res.data);
-			  navigate("/") ;
+        localStorage.setItem("token", res);
+			  navigate("/");
       });
 		} catch (error) {
 			if (
