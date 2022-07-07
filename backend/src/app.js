@@ -27,12 +27,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
 
 // Session middleware
-const MONGODB_URI = process.env.DATABASE_URI;
-const store = new MongoDBStore({
-  uri: MONGODB_URI,
-  collection: 'sessions',
-});
-app.use(session({ secret: 'SEPM', resave: false, saveUninitialized: false, store }));
+// const MONGODB_URI = process.env.DATABASE_URI;
+// const store = new MongoDBStore({
+//   uri: MONGODB_URI,
+//   collection: 'sessions',
+// });
+// app.use(session({ secret: 'SEPM', resave: false, saveUninitialized: false, store }));
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 // Import env
