@@ -1,6 +1,6 @@
-const { QrCodeService, ResponseService } = require('../../services');
-const Error = require('../../config/constant/Error');
-const { catchAsync } = require('../../utils');
+const { QrCodeService, ResponseService } = require('../services');
+const Error = require('../config/constant/Error');
+const { catchAsync } = require('../utils');
 
 const redirect = (req, res) => {
   res.render('qrcode.ejs');

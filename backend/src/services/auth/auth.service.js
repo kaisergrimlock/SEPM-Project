@@ -1,23 +1,41 @@
+const bcrypt = require('bcrypt');
 const { UserModel } = require('../../models');
 const ResponseService = require('../response/response.service');
-// const Error = require('../../config/constant/Error');
+const UserService = require('../user/user.service');
 
-const createUser = async (userBody) => {
-  const user = await UserModel.create(userBody);
+const Error = require('../../config/constant/Error');
 
-  // throw ResponseService.newError(
-  //   Error.PasswordInvalid.errCode,
-  //   Error.PasswordInvalid.message
-  // );
+const register = async (name, email, password) => {
+  if (!name) throw ResponseService.newError(Error.UserNameInvalid.errCode, Error.UserNameInvalid.errMessage);
+
+  // If email invalid
+  if (!email) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
+  else {
+    // Check email duplicated
+    const user = await UserService.getUserByEmail(email);
+    if (user) throw ResponseService.newError(Error.EmailDuplicate.errCode, Error.EmailDuplicate.errMessage);
+  }
+
+  if (!password) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await UserService.createUser(name, email, hashedPassword);
   return user;
 };
 
-const getUserById = async (id) => {
+const login = async (id, email, password) => {
+  if (!id) throw ResponseService.newError(Error.UserIdInvalid.errCode, Error.UserIdInvalid.errMessage);
+  if (!email) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
+  if (!password) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+
   const user = await UserModel.findById(id);
+  if (!user) throw ResponseService.newError(Error.UserNotFound.errCode, Error.UserNotFound.errMessage);
 
-  ResponseService.newSucess(user);
+  if (user.email !== email) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
 
-  return user;
+  const isPassWordValid = await bcrypt.compare(password, user.password);
+  if (!isPassWordValid) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
 };
 
-module.exports = { getUserById, createUser };
+module.exports = { register, login };

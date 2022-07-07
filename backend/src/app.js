@@ -7,10 +7,9 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const session = require('express-session');
-const MongoDBStore = require('connect-mongodb-session')(session);
 const path = require('path');
 
 // Import 3rd party libraries
@@ -20,19 +19,11 @@ const Error = require('./config/constant/Error');
 const { globalErrorHandler } = require('./middlewares');
 const { QrCodeRouter, AuthRouter, ImgRouter } = require('./routers');
 const fileStorage = require('./config/constant/fileStorage');
-const { imgTypeValidator } = require("./utils")
+const { imgTypeValidator } = require('./utils');
 
 // Express views
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
-
-// Session middleware
-// const MONGODB_URI = process.env.DATABASE_URI;
-// const store = new MongoDBStore({
-//   uri: MONGODB_URI,
-//   collection: 'sessions',
-// });
-// app.use(session({ secret: 'SEPM', resave: false, saveUninitialized: false, store }));
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 // Import env
@@ -46,7 +37,12 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(helmet());
 
 // CORS for server and client communication
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: '*',
+  })
+);
 
 // set limit request from same API in timePeroid from same ip
 // set this limit to API calls only
@@ -66,20 +62,22 @@ app.use('/api', limiter);
 // content-type: application/json
 app.use(express.json({ limit: '10kb' }));
 
+// Enable parsing cookies to read
+app.use(cookieParser());
+
 // Data sanitization against NoSql query injection
 app.use(mongoSanitize()); // filter out the dollar signs protect from  query injection attack
 
 // Data sanitization against XSS
 app.use(xss()); // protect from molision code coming from html
 
-//Storage
-app.use(multer({storage: fileStorage, fileFilter: imgTypeValidator}).single('image'))
+// Storage
+app.use(multer({ storage: fileStorage, fileFilter: imgTypeValidator }).single('image'));
 
 // Use specific Router to handle each end point
-app.use('/api/v1', AuthRouter);
-app.use('/api/v1/qrCode', QrCodeRouter);
-app.use('/api/v1/uploadImage', ImgRouter);
-
+app.use('/auth', AuthRouter);
+app.use('/api/qrCode', QrCodeRouter);
+app.use('/api/uploadImage', ImgRouter);
 
 // handling all (get,post,update,delete.....) unhandled routes
 app.use('*', (req, res, next) => {
@@ -92,16 +90,15 @@ app.use(globalErrorHandler);
 // running
 // Connect to Mongoose
 mongoose
-  .connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/user?retryWrites=true&w=majority')
-  .then((result) => {
-    console.log(`Connected`);
+  .connect(process.env.DATABASE)
+  .then(() => {
+    console.log(`Connecting to Mongoose successfully`);
   })
   .catch((err) => {
     console.log(err);
   });
 
 const port = process.env.PORT || 3000;
-console.log(process.env.DATABASE_URI)
 
 const server = app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

@@ -25,6 +25,20 @@ const Error = {
     errMessage: 'qrCode not valid',
   },
 
+  EmailInvalid: {
+    errCode: 105,
+    errMessage: 'Email not valid',
+  },
+  EmailDuplicate: {
+    errCode: 106,
+    errMessage: 'Email duplicated',
+  },
+
+  UserIdInvalid: {
+    errCode: 107,
+    errMessage: 'User id invalid',
+  },
+
   // 200++ Error from Db
   CastError: {
     errCode: 201,
@@ -36,6 +50,13 @@ const Error = {
   },
 
   // 300++ Error from Third Party
+  JwtInvalid: {
+    errCode: 300,
+  },
+  JwtMissing: {
+    errCode: 301,
+    errMessage: 'Jwt is missing',
+  },
 
   // 400++ Error from Internal Server
   GenericError: {

@@ -6,8 +6,8 @@ const newError = (errCode, errorMessage, statusCode = httpStatus.BAD_REQUEST) =>
   return new AppError(errCode, errorMessage, statusCode);
 };
 
-const newSucess = (respBody = {}, message = 'Successfully', code = 0, statusCode = httpStatus.OK) => {
-  return new Success(respBody, message, code, statusCode);
+const newSucess = (data = {}, message = 'Successfully', code = 0, statusCode = httpStatus.OK) => {
+  return new Success(data, message, code, statusCode);
 };
 
 module.exports = { newSucess, newError };
