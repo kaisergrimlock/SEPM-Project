@@ -39,6 +39,10 @@ const Error = {
     errMessage: 'User id invalid',
   },
 
+  AuthHeaderMissing: {
+    errCode: 108,
+    errMessage: 'Auth header missing',
+  },
   // 200++ Error from Db
   CastError: {
     errCode: 201,
