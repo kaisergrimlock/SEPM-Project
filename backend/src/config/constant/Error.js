@@ -49,6 +49,11 @@ const Error = {
     errCode: 109,
     errMessage: 'Auth header missing',
   },
+
+  PasswordEmpty: {
+    errCode: 110,
+    errMessage: 'Password is empty',
+  },
   // 200++ Error from Db
   CastError: {
     errCode: 201,

@@ -21,7 +21,7 @@ const register = async (name, email, password) => {
   }
 
   //If password empty
-  if (!password) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+  if (!password) throw ResponseService.newError(Error.PasswordEmpty.errCode, Error.PasswordEmpty.errMessage);
   //If password invalid
   if (!passwordRegex.test(password)) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
 
@@ -33,8 +33,8 @@ const register = async (name, email, password) => {
 
 const login = async (id, email, password) => {
   if (!id) throw ResponseService.newError(Error.UserIdInvalid.errCode, Error.UserIdInvalid.errMessage);
-  if (!email) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
-  if (!password) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+  if (!email) throw ResponseService.newError(Error.EmailEmpty.errCode, Error.EmailEmpty.errMessage);
+  if (!password) throw ResponseService.newError(Error.PasswordEmpty.errCode, Error.PasswordEmpty.errMessage);
 
   const user = await UserModel.findById(id);
   if (!user) throw ResponseService.newError(Error.UserNotFound.errCode, Error.UserNotFound.errMessage);
