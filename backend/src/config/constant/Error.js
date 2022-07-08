@@ -29,18 +29,24 @@ const Error = {
     errCode: 105,
     errMessage: 'Email not valid',
   },
-  EmailDuplicate: {
+
+  EmailEmpty: {
     errCode: 106,
+    errMessage: 'Email is empty',
+  },
+
+  EmailDuplicate: {
+    errCode: 107,
     errMessage: 'Email duplicated',
   },
 
   UserIdInvalid: {
-    errCode: 107,
+    errCode: 108,
     errMessage: 'User id invalid',
   },
 
   AuthHeaderMissing: {
-    errCode: 108,
+    errCode: 109,
     errMessage: 'Auth header missing',
   },
   // 200++ Error from Db
