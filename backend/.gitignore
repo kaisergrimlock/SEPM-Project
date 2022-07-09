@@ -6,4 +6,4 @@ node_modules
 
 
 #emv
-src/.env
+.env
