@@ -74,6 +74,16 @@ app.use(xss()); // protect from molision code coming from html
 // Storage
 app.use(multer({ storage: fileStorage, fileFilter: imgTypeValidator }).single('image'));
 
+// Deployment
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'build', 'index.html'));
+    res.end();
+  });
+}
+
 // Use specific Router to handle each end point
 app.use('/auth', AuthRouter);
 app.use('/api/qrCode', QrCodeRouter);
@@ -103,16 +113,6 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-
-// Deployment
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'build')));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'build', 'index.html'));
-    res.end();
-  });
-}
 
 // handle Globaly the unhandle Rejection Error which is  outside the express
 // e.g database connection
