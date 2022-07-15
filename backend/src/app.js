@@ -104,6 +104,15 @@ const server = app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
 
+// Deployment
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../frontend/build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../frontend/build', 'index.html'));
+  });
+}
+
 // handle Globaly the unhandle Rejection Error which is  outside the express
 // e.g database connection
 process.on('unhandledRejection', (error) => {
