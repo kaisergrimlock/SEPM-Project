@@ -24,12 +24,12 @@ const { imgTypeValidator } = require('./utils');
 // Express views
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
 // Import env
 
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line global-require
-
+  require('dotenv').config({ path: path.join(__dirname, '../.env') });
   app.use(morgan('dev'));
 }
 
