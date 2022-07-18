@@ -1,23 +1,16 @@
-import React from "react";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
-import About from "./pages/About";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HomePage } from "./views/HomePage";
+import {LoginPage} from "./views/LoginPage"
+import { RegisterPage } from "./views/RegisterPage";
 function App() {
   return (
-    <div
-      className="w-full h-auto overflow-hidden bg-emerald-300 duration-300"
-      id="body"
-    >
+    <div>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/register" element={<RegisterPage />}></Route>
         </Routes>
       </BrowserRouter>
     </div>
