@@ -30,18 +30,21 @@ export const RegisterForm = () => {
         const { name, email, password } = data;
         const registerNewUser = { name, email, password };
         try {
-          await axios.post(`http://localhost:8080/auth/register`, registerNewUser).then(res => {
-            console.log(res.message)
-            setUser({
-              ...user,
-              name: data.name,
-              email: data.email,
-              password: data.password,
-            });
-            navigate("/login")
+          await axios.post(`/auth/register`, registerNewUser).then(res => {
+            console.log(res)
+            if (res.data.code === 0) {
+              setUser({
+                ...user,
+                name: data.name,
+                email: data.email,
+                password: data.password,
+              });
+              navigate("/login");
+            }
           });
         } catch (error) {
-          console.log(error)
+          // Handler when register not successfully
+          console.log(error.response.data)
         }
       };
     
