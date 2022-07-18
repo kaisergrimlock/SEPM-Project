@@ -25,11 +25,11 @@ const { imgTypeValidator } = require('./utils');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
 
-require('dotenv').config({ path: path.join(__dirname, '.env') });
 // Import env
+
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line global-require
-
+  require('dotenv').config({ path: path.join(__dirname, '../.env') });
   app.use(morgan('dev'));
 }
 
@@ -73,6 +73,16 @@ app.use(xss()); // protect from molision code coming from html
 
 // Storage
 app.use(multer({ storage: fileStorage, fileFilter: imgTypeValidator }).single('image'));
+
+// Deployment
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'build', 'index.html'));
+    res.end();
+  });
+}
 
 // Use specific Router to handle each end point
 app.use('/auth', AuthRouter);
