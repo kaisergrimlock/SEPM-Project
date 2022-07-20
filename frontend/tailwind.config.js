@@ -22,13 +22,20 @@ module.exports = {
         lightRed: "#F6ECE9",
         lightOrange: "#FEEFEB",
         lightPurple: "#F2F3FF",
-        yellow: "#DDB40A"
+        yellow: "#DDB40A",
+        navy: "#020D3B",
+        gray:"#808080"
       },
       fontFamily: {
         avenir: ["Avenir", "sans-serif"],
+        nunitoSans: ["Nunito Sans", "sans-serif"],
+        poppins:['Poppins', "sans-serif"],
+        monsterat: ["Montserrat", "sans-serif"]
       },
     },
   },
   
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
