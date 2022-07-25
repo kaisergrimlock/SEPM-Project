@@ -15,7 +15,7 @@ export const LoginForm = () => {
 
   const loginHandler = async (data) => {
     try {
-      await axios.post(`http://localhost:5000/auth/login`, data).then((res) => {
+      await axios.post(`/auth/login`, data).then((res) => {
         // console.log(res.data);
         if (res.data.code === 0) {
           navigate("/");
@@ -90,10 +90,10 @@ export const LoginForm = () => {
             placeholder="Enter your password"
           />
           <span className="text-red-500 mx-5 my-2">
-          {errors.password && errors.password.message}
-        </span>
+            {errors.password && errors.password.message}
+          </span>
         </div>
-      
+
         {error && <div className="text-red-500 mx-5 my-3">* {error}</div>}
 
         <div className="login-btn mt-6 pb-6 border-b border-white/80">
