@@ -16,11 +16,13 @@ const connection = (socket) => {
 
   //user call là người đang gọi, signal_data để mình chuyển video/audio/image cho phía bên kia
   socket.on('call_user', ({user_call, signal_data, from, name}) => {
-    io.to(user_call).emit('call_user', {signal: signal_data, from: from, name: name})
+    console.log(`user with id: ${socket.id} is calling`)
+    socket.to(user_call).emit('call_user', {signal: signal_data, from: from, name: name})
   })
 
   socket.on('answer_call', (data) => {
-    io.to(data.to).emit('call_accepted', data.signal)
+    console.log(`user with id: ${socket.id} answering call`)
+    socket.to(data.to).emit('call_accepted', data.signal)
   })
 
   socket.on('message', (msg) => {
