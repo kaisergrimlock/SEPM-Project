@@ -17,7 +17,7 @@ const Error = {
   },
   UserNotFound: {
     errCode: 103,
-    errMessage: 'User not found',
+    errMessage: 'User not  found',
   },
 
   QrInvalid: {

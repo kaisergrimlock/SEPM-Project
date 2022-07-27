@@ -5,6 +5,5 @@ const AuthService = require('./auth/auth.service');
 const UserService = require('./user/user.service');
 const QrCodeService = require('./qrCode/qrCode.service');
 const JwtService = require('./auth/jwt.service');
-const SocketService = require('./socket/socket.service');
 
-module.exports = { ResponseService, AuthService, QrCodeService, UserService, JwtService, SocketService };
+module.exports = { ResponseService, AuthService, QrCodeService, UserService, JwtService };

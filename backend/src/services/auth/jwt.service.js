@@ -3,15 +3,15 @@ const jwt = require('jsonwebtoken');
 const ResponseService = require('../response/response.service');
 const Error = require('../../config/constant/Error');
 
-const generateJWT = async (userId) => {
+const generateJWT = async (id) => {
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
   const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 
   const accessTokenExpiredIn = process.env.ACCESS_TOKEN_EXPIRES_IN;
   const refreshTokenExpiredIn = process.env.REFRESH_TOKEN_EXPIRES_IN;
 
-  const accessToken = jwt.sign({ userId }, accessTokenSecret, { expiresIn: accessTokenExpiredIn });
-  const refreshToken = jwt.sign({ userId }, refreshTokenSecret, { expiresIn: refreshTokenExpiredIn });
+  const accessToken = jwt.sign({ id }, accessTokenSecret, { expiresIn: accessTokenExpiredIn });
+  const refreshToken = jwt.sign({ id }, refreshTokenSecret, { expiresIn: refreshTokenExpiredIn });
 
   return { accessToken, refreshToken };
 };

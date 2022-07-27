@@ -1,8 +1,6 @@
 const express = require('express');
 // import express
 const app = express();
-
-// Import 3rd party libraries
 const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -14,28 +12,24 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+// Import 3rd party libraries
 
-const { ResponseService, SocketService } = require('./services');
+const { ResponseService } = require('./services');
 const Error = require('./config/constant/Error');
 const { globalErrorHandler } = require('./middlewares');
 const { QrCodeRouter, AuthRouter, ImgRouter } = require('./routers');
 const fileStorage = require('./config/constant/fileStorage');
 const { imgTypeValidator } = require('./utils');
 
-// global
-global._io = io;
-
 // Express views
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: false }));
 
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 // Import env
-
 if (process.env.NODE_ENV !== 'production') {
   // eslint-disable-next-line global-require
-  require('dotenv').config({ path: path.join(__dirname, '../.env') });
+
   app.use(morgan('dev'));
 }
 
@@ -80,16 +74,6 @@ app.use(xss()); // protect from molision code coming from html
 // Storage
 app.use(multer({ storage: fileStorage, fileFilter: imgTypeValidator }).single('image'));
 
-// Deployment
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'build')));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'build', 'index.html'));
-    res.end();
-  });
-}
-
 // Use specific Router to handle each end point
 app.use('/auth', AuthRouter);
 app.use('/api/qrCode', QrCodeRouter);
@@ -116,10 +100,8 @@ mongoose
 
 const port = process.env.PORT || 3000;
 
-global._io.on('connection', SocketService.connection);
-
-server.listen(port, () => {
-  console.log(`Socket and HTTP Server listening on port ${port}`);
+const server = app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
 
 // handle Globaly the unhandle Rejection Error which is  outside the express
