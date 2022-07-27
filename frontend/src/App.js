@@ -4,7 +4,9 @@ import { HomePage } from "./views/HomePage";
 import {LoginPage} from "./views/LoginPage"
 import { RegisterPage } from "./views/RegisterPage";
 import io from 'socket.io-client';
+import Peer from 'peerjs';
 const io = io.connect('http://localhost:3000');
+const peer = new Peer();
 
 function App() {
   return (
