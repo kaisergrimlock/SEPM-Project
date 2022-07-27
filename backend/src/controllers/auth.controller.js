@@ -9,10 +9,12 @@ const register = catchAsync(async (req, res) => {
 });
 
 const login = catchAsync(async (req, res) => {
-  const { id, email, password } = req.body;
-  await AuthService.login(id, email, password);
+  const { email, password } = req.body;
+
+  const userId = await AuthService.login(email, password);
+
   // After validation, now we provide frontend jwt for authentication later
-  const { accessToken, refreshToken } = await JwtService.generateJWT(id);
+  const { accessToken, refreshToken } = await JwtService.generateJWT(userId);
 
   res.cookie('refreshToken', refreshToken, { maxAge: OneDayToSecond, httpOnly: true });
   res.status(201).json(ResponseService.newSucess({ accessToken }));

@@ -1,18 +1,20 @@
+/* eslint-disable no-useless-escape */
 const bcrypt = require('bcrypt');
-const { UserModel } = require('../../models');
 const ResponseService = require('../response/response.service');
 const UserService = require('../user/user.service');
 
 const Error = require('../../config/constant/Error');
 
 const register = async (name, email, password) => {
-  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/ 
+  const emailRegex =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
   if (!name) throw ResponseService.newError(Error.UserNameInvalid.errCode, Error.UserNameInvalid.errMessage);
 
   // If email empty
   if (!email) throw ResponseService.newError(Error.EmailEmpty.errCode, Error.EmailEmpty.errMessage);
-  //If email invalid
+  // If email invalid
   if (!emailRegex.test(email)) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
   else {
     // Check email duplicated
@@ -20,10 +22,11 @@ const register = async (name, email, password) => {
     if (user) throw ResponseService.newError(Error.EmailDuplicate.errCode, Error.EmailDuplicate.errMessage);
   }
 
-  //If password empty
-  if (!password) throw ResponseService.newError(Error.PasswordEmpty.errCode, Error.PasswordEmpty.errMessage);
-  //If password invalid
-  if (!passwordRegex.test(password)) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+  // If password empty
+  if (!password) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+  // If password invalid
+  if (!passwordRegex.test(password))
+    throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -31,18 +34,17 @@ const register = async (name, email, password) => {
   return user;
 };
 
-const login = async (id, email, password) => {
-  if (!id) throw ResponseService.newError(Error.UserIdInvalid.errCode, Error.UserIdInvalid.errMessage);
-  if (!email) throw ResponseService.newError(Error.EmailEmpty.errCode, Error.EmailEmpty.errMessage);
-  if (!password) throw ResponseService.newError(Error.PasswordEmpty.errCode, Error.PasswordEmpty.errMessage);
+const login = async (email, password) => {
+  if (!email) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
+  if (!password) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
 
-  const user = await UserModel.findById(id);
+  const user = await UserService.getUserByEmail(email);
   if (!user) throw ResponseService.newError(Error.UserNotFound.errCode, Error.UserNotFound.errMessage);
-
-  if (user.email !== email) throw ResponseService.newError(Error.EmailInvalid.errCode, Error.EmailInvalid.errMessage);
 
   const isPassWordValid = await bcrypt.compare(password, user.password);
   if (!isPassWordValid) throw ResponseService.newError(Error.PasswordInvalid.errCode, Error.PasswordInvalid.errMessage);
+
+  return user._id.valueOf();
 };
 
 module.exports = { register, login };
