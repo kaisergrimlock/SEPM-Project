@@ -13,6 +13,18 @@ const connection = (socket) => {
     socket.to(roomName).emit('user left', `user with id: ${socket.id} left ${roomName}`);
   });
 
+
+  //user call là người đang gọi, signal_data để mình chuyển video/audio/image cho phía bên kia
+  socket.on('call_user', ({user_call, signal_data, from, name}) => {
+    console.log(`user with id: ${socket.id} is calling`)
+    socket.to(user_call).emit('call_user', {signal: signal_data, from: from, name: name})
+  })
+
+  socket.on('answer_call', (data) => {
+    console.log(`user with id: ${socket.id} answering call`)
+    socket.to(data.to).emit('call_accepted', data.signal)
+  })
+
   socket.on('message', (msg) => {
     console.log(`msg is ${msg} from ${socket.id}`);
     socket.emit('message', msg);
