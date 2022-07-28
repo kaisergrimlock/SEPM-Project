@@ -31,7 +31,7 @@ export const RegisterForm = () => {
     const registerNewUser = { name, email, password };
     try {
       await axios
-        .post(`http://localhost:5000/auth/register`, registerNewUser)
+        .post(`http://localhost:8080/auth/register`, registerNewUser)
         .then((res) => {
           console.log(res);
           if (res.data.code === 0) {

@@ -7,7 +7,7 @@ router.route('/register').post(AuthController.register);
 
 router.route('/login').post(AuthController.login);
 
-router.route('/verifyRefreshToken').get(AuthController.verifyRefreshToken);
+router.route('/verifyRefreshToken').post(AuthController.verifyRefreshToken);
 
 router.route('/logout').get(AuthController.logout);
 
