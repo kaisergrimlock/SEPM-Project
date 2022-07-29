@@ -100,7 +100,7 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="border border-black px-1 rounded-[15px] bg-navy w-[750px] h-auto">
+    <div className="border border-black px-1 rounded-[15px] bg-navy w-[500px] h-auto">
       <form
         action="/register"
         method="POST"
@@ -123,7 +123,7 @@ export const RegisterForm = () => {
             name="name"
             placeholder="E.g: An"
             {...register("name", registerValidation.name)}
-            className="rounded-[50px]"
+            className="rounded-[10px]"
           />
           <span className="text-red-500 mx-5 my-2">
             {errors.name && errors.name.message}
@@ -140,7 +140,7 @@ export const RegisterForm = () => {
             name="email"
             placeholder="E.g: example@gmail.com"
             {...register("email", registerValidation.email)}
-            className="rounded-[50px]"
+            className="rounded-[10px]"
           />
           <span className="text-red-500 mx-5 my-2">
             {errors.email && errors.email.message}
@@ -157,7 +157,7 @@ export const RegisterForm = () => {
             name="password"
             placeholder="Enter your password"
             {...register("password", registerValidation.password)}
-            className="rounded-[50px]"
+            className="rounded-[10px]"
           />
           <span className="text-red-500 mx-5 my-2">
             {errors.password && errors.password.message}
@@ -169,7 +169,7 @@ export const RegisterForm = () => {
         <div className="pt-3 pb-6 border-b border-white/80">
           <button
             type="submit"
-            className=" bg-cyan text-white w-full h-[50px] rounded-[50px] font-semibold"
+            className=" bg-cyan text-white w-full h-[50px] rounded-[10px] font-semibold"
           >
             Register
           </button>
