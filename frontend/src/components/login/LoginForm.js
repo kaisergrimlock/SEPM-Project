@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+
 export const LoginForm = () => {
   const {
     register,
@@ -9,29 +10,9 @@ export const LoginForm = () => {
     formState: { errors },
   } = useForm();
 
+  let {loginUser, user, error} = useContext(AuthContext)
+
   const [error, setError] = useState("");
-
-  const navigate = useNavigate();
-
-  const loginHandler = async (data) => {
-    try {
-      await axios.post(`/auth/login`, data).then((res) => {
-        // console.log(res.data);
-        if (res.data.code === 0) {
-          navigate("/");
-        }
-      });
-    } catch (err) {
-      // Handle error from backend
-      console.log(err.response.data.errMessage);
-      if (err.response.data.errMessage === "Password is invalid") {
-        setError("Email or Password is invalid");
-      } else {
-        setError(err.response.data.errMessage);
-      }
-    }
-    // console.log(data)
-  };
 
   const loginValidation = {
     email: {
@@ -42,18 +23,9 @@ export const LoginForm = () => {
     },
   };
 
-  // const verifyToken = () => {
-  //   let config = {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   };
-  //   axios.get("http://localhost:8080/auth/verifyRefreshToken", config).then(res => {
-  //     console.log(res)
-  //   })
-  // }
-
   return (
     <div className="border border-black px-5 py-3 rounded-[15px] bg-navy w-[750px] h-auto">
-      <form action="/login" method="post" onSubmit={handleSubmit(loginHandler)}>
+      <form action="/login" method="post" onSubmit={handleSubmit(loginUser)}>
         <h1 className="mt-3 mx-5 pb-1 border-b-2 border-white inline-block w-fit text-[48px] font-semibold text-white">
           Login
         </h1>
@@ -100,7 +72,6 @@ export const LoginForm = () => {
           <button
             type="submit"
             className="w-full bg-cyan h-[50px] font-semibold text-white rounded-[50px]"
-            // onClick={verifyToken}
           >
             Login
           </button>
