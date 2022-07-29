@@ -1,6 +1,8 @@
 const express = require('express');
 // import express
 const app = express();
+
+// Import 3rd party libraries
 const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -12,14 +14,18 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const path = require('path');
 
-// Import 3rd party libraries
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
-const { ResponseService } = require('./services');
+const { ResponseService, SocketService } = require('./services');
 const Error = require('./config/constant/Error');
 const { globalErrorHandler } = require('./middlewares');
 const { QrCodeRouter, AuthRouter, ImgRouter } = require('./routers');
 const fileStorage = require('./config/constant/fileStorage');
 const { imgTypeValidator } = require('./utils');
+
+// global
+global._io = io;
 
 // Express views
 app.set('views', path.join(__dirname, 'views'));
@@ -88,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/auth', AuthRouter);
 app.use('/api/qrCode', QrCodeRouter);
 app.use('/api/uploadImage', ImgRouter);
-
+global._io.on('connection', SocketService.connection);
 // handling all (get,post,update,delete.....) unhandled routes
 app.use('*', (req, res, next) => {
   next(ResponseService.newError(Error.UrlNotFound.errCode, Error.UrlNotFound.errMessage));
@@ -110,8 +116,8 @@ mongoose
 
 const port = process.env.PORT || 3000;
 
-const server = app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+server.listen(port, () => {
+  console.log(`Socket and HTTP Server listening on port ${port}`);
 });
 
 // handle Globaly the unhandle Rejection Error which is  outside the express

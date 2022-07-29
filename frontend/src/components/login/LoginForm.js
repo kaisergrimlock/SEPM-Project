@@ -12,6 +12,8 @@ export const LoginForm = () => {
 
   let {loginUser, user, error} = useContext(AuthContext)
 
+  const [error, setError] = useState("");
+
   const loginValidation = {
     email: {
       required: "* Email is required",
@@ -85,8 +87,6 @@ export const LoginForm = () => {
           </Link>
         </p>
       </form>
-
-      {user && <p>Hello {user.userId}</p>}
     </div>
   );
 };

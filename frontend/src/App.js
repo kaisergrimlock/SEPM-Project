@@ -3,7 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { HomePage } from "./views/HomePage";
 import { LoginPage } from "./views/LoginPage";
 import { RegisterPage } from "./views/RegisterPage";
+
 import { AuthProvider } from "./context/AuthContext";
+
+import io from 'socket.io-client';
+const io = io.connect('http://localhost:3000');
+
 function App() {
   return (
     <div>
