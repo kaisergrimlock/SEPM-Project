@@ -14,12 +14,12 @@ export const PhoneMenu = (props) => {
             : "translate-x-full opacity-0"
         }  duration-300 flex justify-end`}
       >
-        <div className="w-1/2 border-l border-l-black block  bg-darkBlue2">
-          <ul className="text-center text-base text-white/50">
+        <div className="w-1/2 border-l border-l-black block  bg-lightGray">
+          <ul className="text-center text-base text-black">
             <li>
               <Link
                 to="/about"
-                className="hover:text-white duration-300 py-5 block w-full"
+                className="hover:opacity-50 duration-300 py-5 block w-full"
               >
                 About
               </Link>
@@ -28,7 +28,7 @@ export const PhoneMenu = (props) => {
             <li>
               <Link
                 to="/meeting"
-                className="hover:text-white duration-300 py-5 block w-full"
+                className="hover:opacity-50 duration-300 py-5 block w-full"
               >
                 Meeting
               </Link>
@@ -39,7 +39,7 @@ export const PhoneMenu = (props) => {
                 <li>
                   <Link
                     to="/"
-                    className="hover:text-white duration-300 py-5 block w-full"
+                    className="hover:opacity-50 duration-300 py-5 block w-full"
                     onClick={logoutUser}
                   >
                     Logout
@@ -51,7 +51,7 @@ export const PhoneMenu = (props) => {
                 <li>
                   <Link
                     to="/login"
-                    className="hover:text-white duration-300 py-5 block w-full"
+                    className="hover:opacity-50 duration-300 py-5 block w-full"
                   >
                     Login
                   </Link>
@@ -59,7 +59,7 @@ export const PhoneMenu = (props) => {
                 <li>
                   <Link
                     to="/register"
-                    className="hover:text-white duration-300 py-5 block w-full"
+                    className="hover:opacity-50 duration-300 py-5 block w-full"
                   >
                     Register
                   </Link>
