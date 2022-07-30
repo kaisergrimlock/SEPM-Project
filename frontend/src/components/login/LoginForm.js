@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+
 export const LoginForm = () => {
   const {
     register,
@@ -9,29 +10,7 @@ export const LoginForm = () => {
     formState: { errors },
   } = useForm();
 
-  const [error, setError] = useState("");
-
-  const navigate = useNavigate();
-
-  const loginHandler = async (data) => {
-    try {
-      await axios.post(`/auth/login`, data).then((res) => {
-        // console.log(res.data);
-        if (res.data.code === 0) {
-          navigate("/");
-        }
-      });
-    } catch (err) {
-      // Handle error from backend
-      console.log(err.response.data.errMessage);
-      if (err.response.data.errMessage === "Password is invalid") {
-        setError("Email or Password is invalid");
-      } else {
-        setError(err.response.data.errMessage);
-      }
-    }
-    // console.log(data)
-  };
+  let {loginUser, error} = useContext(AuthContext)
 
   const loginValidation = {
     email: {
@@ -42,18 +21,9 @@ export const LoginForm = () => {
     },
   };
 
-  // const verifyToken = () => {
-  //   let config = {
-  //     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //   };
-  //   axios.get("http://localhost:8080/auth/verifyRefreshToken", config).then(res => {
-  //     console.log(res)
-  //   })
-  // }
-
   return (
-    <div className="border border-black px-5 py-3 rounded-[15px] bg-navy w-[750px] h-auto">
-      <form action="/login" method="post" onSubmit={handleSubmit(loginHandler)}>
+    <div className="border border-black px-5 py-3 rounded-[10px] bg-navy w-[500px] h-auto">
+      <form action="/login" method="post" onSubmit={handleSubmit(loginUser)}>
         <h1 className="mt-3 mx-5 pb-1 border-b-2 border-white inline-block w-fit text-[48px] font-semibold text-white">
           Login
         </h1>
@@ -70,7 +40,7 @@ export const LoginForm = () => {
             name="email"
             {...register("email", loginValidation.email)}
             placeholder="Enter your email"
-            className="rounded-[50px]"
+            className="rounded-[10px]"
           />
           <span className="text-red-500 mx-5 my-2">
             {errors.email && errors.email.message}
@@ -86,7 +56,7 @@ export const LoginForm = () => {
             id="password"
             name="password"
             {...register("password", loginValidation.password)}
-            className="rounded-[50px]"
+            className="rounded-[10px]"
             placeholder="Enter your password"
           />
           <span className="text-red-500 mx-5 my-2">
@@ -99,8 +69,7 @@ export const LoginForm = () => {
         <div className="login-btn mt-6 pb-6 border-b border-white/80">
           <button
             type="submit"
-            className="w-full bg-cyan h-[50px] font-semibold text-white rounded-[50px]"
-            // onClick={verifyToken}
+            className="w-full bg-cyan h-[50px] font-semibold text-white rounded-[10px]"
           >
             Login
           </button>
