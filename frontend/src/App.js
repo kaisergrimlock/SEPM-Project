@@ -1,26 +1,23 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HomePage } from "./views/HomePage";
-import { LoginPage } from "./views/LoginPage";
+import {LoginPage} from "./views/LoginPage"
 import { RegisterPage } from "./views/RegisterPage";
-
-import { AuthProvider } from "./context/AuthContext";
-
-// import io from 'socket.io-client';
-// const io = io.connect('http://localhost:3000');
+import io from 'socket.io-client';
+import Peer from 'peerjs';
+const io = io.connect('http://localhost:3000');
+const peer = new Peer();
 
 function App() {
   return (
     <div>
-      <Router>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<HomePage />}></Route>
-            <Route path="/login" element={<LoginPage />}></Route>
-            <Route path="/register" element={<RegisterPage />}></Route>
-          </Routes>
-        </AuthProvider>
-      </Router>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/register" element={<RegisterPage />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

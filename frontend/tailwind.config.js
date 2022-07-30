@@ -24,10 +24,7 @@ module.exports = {
         lightPurple: "#F2F3FF",
         yellow: "#DDB40A",
         navy: "#020D3B",
-        gray:"#808080",
-        lightGray:"#E7E5E5",
-        lightBlue2:"#E9EEFF",
-        lightBrown: "#737373",
+        gray:"#808080"
       },
       fontFamily: {
         avenir: ["Avenir", "sans-serif"],
