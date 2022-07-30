@@ -94,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/auth', AuthRouter);
 app.use('/api/qrCode', QrCodeRouter);
 app.use('/api/uploadImage', ImgRouter);
-
+global._io.on('connection', SocketService.connection);
 // handling all (get,post,update,delete.....) unhandled routes
 app.use('*', (req, res, next) => {
   next(ResponseService.newError(Error.UrlNotFound.errCode, Error.UrlNotFound.errMessage));
@@ -115,8 +115,6 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
-
-global._io.on('connection', SocketService.connection);
 
 server.listen(port, () => {
   console.log(`Socket and HTTP Server listening on port ${port}`);
