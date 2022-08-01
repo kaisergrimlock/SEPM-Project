@@ -28,6 +28,7 @@ module.exports = {
         lightGray:"#E7E5E5",
         lightBlue2:"#E9EEFF",
         lightBrown: "#737373",
+        lightBlack: "#2D2D2D",
       },
       fontFamily: {
         avenir: ["Avenir", "sans-serif"],
