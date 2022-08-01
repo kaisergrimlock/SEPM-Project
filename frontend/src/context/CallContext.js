@@ -14,16 +14,16 @@ const ContextProvider = ({ children }) => {
     const [me, setMe] = useState('');
     const [name, setName] = useState('');
 
-    const myVideo = useRef();
+    const myAudio = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        navigator.mediaDevices.getUserMedia({audio: true })
           .then((currentStream) => {
             setStream(currentStream);
     
-            myVideo.current.srcObject = currentStream;
+            myAudio.current.srcObject = currentStream;
           });
     
         socket.on('me', (id) => setMe(id));
@@ -83,7 +83,7 @@ const ContextProvider = ({ children }) => {
         <SocketContext.Provider value={{
             call,
             callAccepted,
-            myVideo,
+            myAudio,
             userVideo,
             stream,
             name,
