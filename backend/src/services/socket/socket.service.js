@@ -1,4 +1,5 @@
 const connection = (socket) => {
+  socket.emit("me", socket.id);
   console.log(`user connected id: ${socket.id}`);
   let roomName;
   socket.on('join room', (room) => {
@@ -10,14 +11,15 @@ const connection = (socket) => {
 
   socket.on('disconnect', () => {
     console.log(`user disconnected id: ${socket.id}`);
+    socket.broadcast.emit("callEnded")
     socket.to(roomName).emit('user left', `user with id: ${socket.id} left ${roomName}`);
   });
 
 
-  //user call là người đang gọi, signal_data để mình chuyển video/audio/image cho phía bên kia
-  socket.on('call_user', ({user_call, signal_data, from, name}) => {
+  //user call là người đang gọi, signalData để mình chuyển video/audio/image cho phía bên kia
+  socket.on('call_user', ({userToCall, signalData, from, name}) => {
     console.log(`user with id: ${socket.id} is calling`)
-    socket.to(user_call).emit('call_user', {signal: signal_data, from: from, name: name})
+    socket.to(userToCall).emit('call_user', {signal: signalData, from: from, name: name})
   })
 
   socket.on('answer_call', (data) => {
