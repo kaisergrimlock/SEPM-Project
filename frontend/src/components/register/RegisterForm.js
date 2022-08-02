@@ -32,7 +32,7 @@ export const RegisterForm = () => {
     try {
 
       await axios
-        .post(`http://localhost:8080/auth/register`, registerNewUser)
+        .post(`/auth/register`, registerNewUser)
         .then((res) => {
           console.log(res);
           if (res.data.code === 0) {

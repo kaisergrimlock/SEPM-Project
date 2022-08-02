@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   let loginUser = async (d, e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8080/auth/login`, d).then((res) => {
+      await axios.post(`/auth/login`, d).then((res) => {
         console.log(res.data);
         if (res.data.code === 0) {
           setToken(res.data.data.accessToken);
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
           );
           axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
           navigate("/");
-        } 
+        }
       });
     } catch (err) {
       // Handle error from backend
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutUser = async () => {
     // e.preventDefault();
-    let response = await fetch("http://localhost:8080/auth/logout");
+    let response = await fetch("/auth/logout");
     if (response.status === 200) {
       console.log(response);
       setToken(null);
@@ -70,22 +70,22 @@ export const AuthProvider = ({ children }) => {
   //   } catch(err){
   //     console.log(err.response)
   //   }
-    
+
   //   if (response.status === 201){
   //       console.log(response.data)
   //   }
   //   console.log(response);
   // };
 
-//   useEffect(() => {
-//     let interval = setInterval(() => {
-//       if (token) {
-//         updateToken();
-//       }
-//     }, 20000);
+  //   useEffect(() => {
+  //     let interval = setInterval(() => {
+  //       if (token) {
+  //         updateToken();
+  //       }
+  //     }, 20000);
 
-//     return () => clearInterval(interval);
-//   }, [token]);
+  //     return () => clearInterval(interval);
+  //   }, [token]);
 
   let contextData = {
     user: user,
