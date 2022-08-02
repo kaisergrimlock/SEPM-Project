@@ -1,30 +1,33 @@
 import React, { useState } from "react";
+import { RoomFooter } from "../footer/RoomFooter";
+import { ImageList } from "./ImageList";
 import { User } from "./User";
 // import upload from "../../assets/svg/upload.svg";
 // import { DisplaySvg } from "../displaySvg/DisplaySvg";
 
 export const RoomContent = (props) => {
-  const { images, currentImage } = props;
+  const { images, currentImage, handleClickedImage } = props;
   return (
-    <div className="flex w-full h-screen bg-lightBlue2">
-      <div className="w-1/5 h-auto">
-        {images
-          ? images.map((image, index) => {
-              return (
-                <div className="text-center">
-                  <img src={image} className="" />
-                  <span className="text-center inline-block w-full py-2">{index + 1}</span>
-                </div>
-              );
-            })
-          : ""}
-      </div>
-      <div className="bg-black w-full h-auto">
-        {currentImage ? <img src={currentImage} className="" /> : ""}
+    <div className="flex w-full h-auto ">
+      <ImageList images={images} handleClickedImage={handleClickedImage}/>
+
+      <div className="w-full h-[92vh]">
+        <div className="w-full h-[75vh]">
+          {currentImage ? <img src={currentImage} className="w-full h-full object-scale-down aspect-auto" /> : ""}
+        </div>
+        <RoomFooter />
       </div>
 
-      <div className="w-1/5 h-auto">
-        <User />
+      <div className="w-1/5 h-[92vh] bg-lightBlack overflow-y-scroll">
+        <User username={"User1"} talk="bg-navy/40"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
+        <User username={"User2"} talk="bg-none"/>
       </div>
     </div>
   );
