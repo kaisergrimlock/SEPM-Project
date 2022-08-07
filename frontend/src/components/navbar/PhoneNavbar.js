@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import { PhoneMenu } from "../menu/PhoneMenu";
 import {DisplaySvg} from "../displaySvg/DisplaySvg";
 import logo from "../../assets/svg/logo.svg"
-export const PhoneNavbar = () => {
+export const PhoneNavbar = (props) => {
+  const {handleCollaboration} = props
+
   const [isClicked, setIsClicked] = useState(false);
   const[isScrolled, setIsScrolled] = useState(false)
 
@@ -35,7 +37,7 @@ export const PhoneNavbar = () => {
           </div>
         </div>
 
-        <PhoneMenu isClicked={isClicked} />
+        <PhoneMenu isClicked={isClicked} handleCollaboration={handleCollaboration}/>
       </div>
     </nav>
   );

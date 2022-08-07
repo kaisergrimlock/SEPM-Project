@@ -3,7 +3,9 @@ import {Link} from 'react-router-dom'
 import { DisplaySvg } from '../displaySvg/DisplaySvg'
 import { Menu } from '../menu/Menu'
 import logo from "../../assets/svg/logo.svg"
-export const Navbar = () => {
+export const Navbar = (props) => {
+  const {handleCollaboration} = props
+ 
   const[isScrolled, setIsScrolled] = useState(false)
 
   window.addEventListener("scroll", () => {
@@ -25,7 +27,7 @@ export const Navbar = () => {
         </Link>
       </div>
 
-      <Menu isScrolled={isScrolled}/>
+      <Menu isScrolled={isScrolled} handleCollaboration={handleCollaboration}/>
     </nav>
   )
 }

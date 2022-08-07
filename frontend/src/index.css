@@ -18,10 +18,10 @@
     [multiple],
     textarea,
     select {
-      @apply w-full rounded-md shadow-sm focus:border-black focus:ring-black my-3 h-[50px] px-5;
+      @apply w-full rounded-md shadow-sm focus:border-lightBlue my-3 h-[50px] px-5;
     }
     [type="checkbox"],
     [type="radio"] {
-      @apply rounded-md focus:border-black focus:ring-black my-3;
+      @apply rounded-md focus:border-lightBlue my-3;
     }
   }
