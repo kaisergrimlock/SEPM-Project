@@ -36,9 +36,10 @@ const verifyRefreshToken = catchAsync(async (req, res) => {
   res.status(201).json(ResponseService.newSucess({ accessToken: tokens.accessToken }));
 });
 
-const logout = catchAsync(async (req, res) => {
-  res.cookie('refreshToken', '');
-  res.status(200).json(ResponseService.newSucess());
-});
+// const logout = catchAsync(async (req, res) => {
+//   res.clearCookie('refreshToken');
+//   res.header('Authorization', '').json(ResponseService.newSucess());
+//   res.end();
+// });
 
-module.exports = { register, login, logout, verifyRefreshToken };
+module.exports = { register, login, verifyRefreshToken };
