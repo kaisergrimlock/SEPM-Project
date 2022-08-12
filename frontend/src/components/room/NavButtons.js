@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { DisplaySvg } from "../displaySvg/DisplaySvg";
 import record from "../../assets/svg/record.svg";
 import stop from "../../assets/svg/stop.svg";
 import microphone from "../../assets/svg/microphone.svg";
 import muted from "../../assets/svg/muted.svg";
 import upload from "../../assets/svg/upload.svg";
-
-
+import {Link} from 'react-router-dom'
 export const NavButtons = (props) => {
   const { isMuted, isRecorded, handleRecorded, handleMicrophone, handleImages} = props;
 
@@ -40,10 +39,10 @@ export const NavButtons = (props) => {
           <DisplaySvg children={microphone} note="record" />
         )}
       </button>
-      <button className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px]">
+      <Link to={"/"} className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300">
         {" "}
         Leave{" "}
-      </button>
+      </Link>
     </div>
   );
 };
