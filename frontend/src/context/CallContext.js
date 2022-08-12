@@ -1,6 +1,7 @@
 import React, { createContext, useState, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
+import RecordRTC from './RecordRTC';
 
 const SocketContext = createContext();
 
@@ -31,13 +32,32 @@ const ContextProvider = ({ children }) => {
         socket.on('callUser', ({ from, name: callerName, signal }) => {
           setCall({ isReceivingCall: true, from, name: callerName, signal });
         })
-    }, [])
+    }, []).then(async (myVideo) => {
+      let recorder = RecordRTC(myVideo, {
+        type: 'audio',
+      });
+      recorder.startRecording();
 
+      const sleep = m => new Promise(r => setTimeout(r, m));
+      await sleep(3000);
+
+      recorder.stopRecording(function() {
+        let blob = recorder.getBlob();
+        invokeSaveAsDialog(blob);
+      });
+    })
+//Mute Mic
     const muteMic = () => {
         currentSTream.getAudioTracks().forEach(track => {
             track.disable();
         });
     }
+
+    const unMuteMic = () => {
+      currentSTream.getAudioTracks().forEach(track => {
+          track.enable();
+      });
+  }
 
     const answerCall = () => {
         setCallAccepted(true);
@@ -99,6 +119,8 @@ const ContextProvider = ({ children }) => {
             callUser,
             leaveCall,
             answerCall,
+            muteMic,
+            unMuteMic,
         }}>
             {children}
         </SocketContext.Provider>
