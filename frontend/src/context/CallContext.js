@@ -25,27 +25,26 @@ const ContextProvider = ({ children }) => {
             setStream(currentStream);
 
             myVideo.current.srcObject = currentStream;
-          });
+          }).then(async (myVideo) => {
+              let recorder = RecordRTC(myVideo, {
+                type: 'audio',
+              });
+              recorder.startRecording();
+        
+              const sleep = m => new Promise(r => setTimeout(r, m));
+              await sleep(3000);
+        
+              recorder.stopRecording(function() {
+                let blob = recorder.getBlob();
+                invokeSaveAsDialog(blob);
+              });
+            })
 
         socket.on('me', (id) => setMe(id));
-
         socket.on('callUser', ({ from, name: callerName, signal }) => {
           setCall({ isReceivingCall: true, from, name: callerName, signal });
         })
-    }, []).then(async (myVideo) => {
-      let recorder = RecordRTC(myVideo, {
-        type: 'audio',
-      });
-      recorder.startRecording();
-
-      const sleep = m => new Promise(r => setTimeout(r, m));
-      await sleep(3000);
-
-      recorder.stopRecording(function() {
-        let blob = recorder.getBlob();
-        invokeSaveAsDialog(blob);
-      });
-    })
+    }, [])
 //Mute Mic
     const muteMic = () => {
         currentSTream.getAudioTracks().forEach(track => {
