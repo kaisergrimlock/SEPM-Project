@@ -25,3 +25,17 @@
       @apply rounded-md focus:border-lightBlue my-3;
     }
   }
+
+  #dev-info > * {
+    transform: translateY(20px);
+    transition: 0.3s;
+  }
+  
+  #dev-info:hover {
+    opacity: 1;
+    transition: all 0.3s ease;
+  }
+  
+  #dev-info:hover > * {
+    transform: translateY(0);
+  }
