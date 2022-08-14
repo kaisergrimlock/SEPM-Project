@@ -16,16 +16,10 @@ export const CreateRoomForm = (props) => {
   const navigate = useNavigate();
 
   const handleRoomId = (e) => {
-    e.preventDefault()
-    if (roomId === "1234") {
-      navigate("/meeting");
-    } else{
-      if(roomId.length === 0){
-        setError("* Required Room ID")
-      } else{
-        setError("* Invalid Room ID")
-      }
-    }
+    e.preventDefault();
+    if (roomId) navigate(`/meeting/${roomId}`);
+
+    setError("* Required Room ID");
   };
 
   return (
@@ -34,7 +28,10 @@ export const CreateRoomForm = (props) => {
         createRoom ? "flex" : "hidden"
       } justify-center w-full h-screen items-center z-50 px-5`}
     >
-      <form className="w-[350px] h-fit bg-lightGray px-5 py-5 rounded-md" onSubmit={handleRoomId}>
+      <form
+        className="w-[350px] h-fit bg-lightGray px-5 py-5 rounded-md"
+        onSubmit={handleRoomId}
+      >
         <div className="flex justify-end">
           <button onClick={handleClosed}>
             <DisplaySvg children={close} note="close-button" />{" "}
