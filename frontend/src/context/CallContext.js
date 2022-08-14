@@ -36,7 +36,6 @@ const ContextProvider = ({ children }) => {
         
               recorder.stopRecording(function() {
                 let blob = recorder.getBlob();
-                invokeSaveAsDialog(blob);
               });
             })
 
@@ -45,15 +44,16 @@ const ContextProvider = ({ children }) => {
           setCall({ isReceivingCall: true, from, name: callerName, signal });
         })
     }, [])
+    
 //Mute Mic
     const muteMic = () => {
-        currentSTream.getAudioTracks().forEach(track => {
+        myVideo.getAudioTracks().forEach(track => {
             track.disable();
         });
     }
 
     const unMuteMic = () => {
-      currentSTream.getAudioTracks().forEach(track => {
+      myVideo.getAudioTracks().forEach(track => {
           track.enable();
       });
   }
