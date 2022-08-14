@@ -160,29 +160,23 @@ export const Room = (props) => {
   }
 
   // Toggle Video
-  let isVideo = true;
-  let colorVideo = "#bc1823";
-  function toggleVideo() {
-    document.getElementById("avv").style.backgroundColor = colorVideo;
-    if (isVideo) {
-      colorVideo = "#302b70";
-    } else {
-      colorVideo = "#bc1823";
-    }
-    isVideo = !isVideo;
-    userStream.current.getVideoTracks()[0].enabled = isVideo;
-  }
+  // let isVideo = true;
+  // let colorVideo = "#bc1823";
+  // function toggleVideo() {
+  //   document.getElementById("avv").style.backgroundColor = colorVideo;
+  //   if (isVideo) {
+  //     colorVideo = "#302b70";
+  //   } else {
+  //     colorVideo = "#bc1823";
+  //   }
+  //   isVideo = !isVideo;
+  //   userStream.current.getVideoTracks()[0].enabled = isVideo;
+  // }
 
   // Toggle Audio
   let isAudio = true;
   let colorAudio = "#bc1823";
   function toggleAudio() {
-    document.getElementById("av").style.backgroundColor = colorAudio;
-    if (isAudio) {
-      colorAudio = "#302b70";
-    } else {
-      colorAudio = "#bc1823";
-    }
     isAudio = !isAudio;
     userStream.current.getAudioTracks()[0].enabled = isAudio;
   }
