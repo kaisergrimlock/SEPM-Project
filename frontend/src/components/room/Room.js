@@ -175,7 +175,6 @@ export const Room = (props) => {
 
   // Toggle Audio
   let isAudio = true;
-  let colorAudio = "#bc1823";
   function toggleAudio() {
     isAudio = !isAudio;
     userStream.current.getAudioTracks()[0].enabled = isAudio;
