@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RoomFooter } from "../footer/RoomFooter";
+// import { RoomFooter } from "../footer/RoomFooter";
 import { RoomHeader } from "../header/RoomHeader";
 // import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
@@ -9,23 +9,28 @@ export const Room = () => {
 
   let [currentImage, setCurrentImage] = useState("");
 
-  // let [clickedImage, setClickedImage] = useState("")
+  const [colorPicked, setColorPicked] = useState("#6DA8D6")
 
   const handleClickedImage = (id) => {
     setCurrentImage(images[id])
-    console.log(currentImage)
+    // console.log(currentImage)
   }
 
   let handleImages = (e) => {
     const filePreview = URL.createObjectURL(e.target.files[0]);
     setCurrentImage(filePreview);
     setImages((prevImage) => [...prevImage, filePreview]);
-    console.log(images);
   };
+
+  const onChangeColorPicked = (e, cursorImage) => {
+    setColorPicked(e.target.value)
+    document.body.style.cursor = `url(${currentImage})`
+  }
+
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
       <RoomHeader handleImages={handleImages} />
-      <RoomContent currentImage={currentImage} images={images} handleClickedImage={handleClickedImage}/>
+      <RoomContent currentImage={currentImage} images={images} handleClickedImage={handleClickedImage} colorPicked={colorPicked} onChangeColorPicked ={onChangeColorPicked} />
     </div>
   );
 };
