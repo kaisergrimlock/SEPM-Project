@@ -5,11 +5,12 @@ import { IntroBlock } from "../components/introBlock/IntroBlock";
 import heart from "../assets/svg/heart.svg";
 import stethoscope from "../assets/svg/stethoscope.svg";
 import doctorList from "../assets/svg/doctorList.svg";
+import advertisement from "../assets/svg/advertisement.svg"
 
 export const HomePage = () => {
   return (
     <>
-      <Header />
+      <Header image={advertisement}/>
       <main className="main bg-lightBlue2 w-full">
         <h1 className="text-center text-[48px] py-5 font-semibold">
           What you <span className="text-red-500">can do?</span>
