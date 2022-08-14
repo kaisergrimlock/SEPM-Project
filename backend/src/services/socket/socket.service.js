@@ -1,61 +1,78 @@
-let users = [];
-
 const connection = (socket) => {
-  console.log(`user connected id: ${socket.id}`);
-  socket.on('joinRoom', (roomId) => {
-    const newUser = { userId: socket.id, roomId };
+  /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
 
-    const isUserAlreadyConnected = users.some((user) => user.userId === newUser.userId);
+  // room object to store the created room IDs
+  const rooms = {};
+  const users = {};
+  const socketToRoom = {};
 
-    if (!isUserAlreadyConnected) {
-      users.push(newUser);
-      socket.join(newUser.roomId);
+  // when the user is forming a connection with socket.io
+  // handling one on one video call (Used)
+  socket.on('join room', (roomID) => {
+    // if the room is already created, that means a person has already joined the room
+    // then take the new user and push them into the same room
+    // else create a new room
+    if (rooms[roomID]) {
+      rooms[roomID].push(socket.id);
     } else {
-      // Modify users based on room which user joined
-      // eslint-disable-next-line array-callback-return
-      users.map((user) => {
-        if (user.userId === newUser.userId) {
-          if (user.roomId !== newUser.roomId) {
-            socket.leave(user.roomId);
-            socket.join(newUser.roomId);
-            // eslint-disable-next-line no-param-reassign
-            user.roomId = newUser.roomId;
-          }
-        }
-      });
+      rooms[roomID] = [socket.id];
     }
 
-    console.log(`user with id: ${newUser.userId} joined room: ${newUser.roomId}`);
-    console.log(`After join room, new users is`, users);
-    socket.to(newUser.roomId).emit('newUserJoined', `new user with id: ${newUser.userId} joined room: ${newUser.roomId}`);
+    // finding otherUSer - see if id is of the other user
+    const otherUser = rooms[roomID].find((id) => id !== socket.id);
+    // if someone has joined then we get the id of the other user
+    if (otherUser) {
+      socket.emit('other user', otherUser);
+      socket.to(otherUser).emit('user joined', socket.id);
+    }
   });
 
+  // handling Group Video Call (Used)
+  socket.on('join room group', (roomID) => {
+    // getting the room with the room ID and adding the user to the room
+    if (users[roomID]) {
+      users[roomID].push(socket.id);
+    } else {
+      users[roomID] = [socket.id];
+    }
+
+    // returning new room with all the attendees after new attendee joined
+    socketToRoom[socket.id] = roomID;
+    const usersInThisRoom = users[roomID].filter((id) => id !== socket.id);
+    socket.emit('all users', usersInThisRoom);
+  });
+
+  // sending signal to existing members when user join (Used)
+  socket.on('sending signal', (payload) => {
+    global._io.to(payload.userToSignal).emit('user joined', {
+      signal: payload.signal,
+      callerID: payload.callerID,
+    });
+  });
+
+  // signal recieved by the user who joined (Used)
+  socket.on('returning signal', (payload) => {
+    global._io.to(payload.callerID).emit('receiving returned signal', {
+      signal: payload.signal,
+      id: socket.id,
+    });
+  });
+
+  // handling user disconnect in group call (Used)
   socket.on('disconnect', () => {
-    console.log(`user disconnected id: ${socket.id}`);
-    // console.log(socket.id + ' disconnected.')
-    const disconnectedUser = users.filter((user) => user.userId === socket.id)[0];
-    users = users.filter((user) => user.userId !== socket.id);
-    console.log(`user ${disconnectedUser.userId} disconnected from ${disconnectedUser.roomId}`);
-    console.log('users after someone disconnected', users);
-    socket
-      .to(disconnectedUser.roomId)
-      .emit('userLeft', `user with id: ${disconnectedUser.userId} left room ${disconnectedUser.roomId}`);
-  });
+    // getting the room array with all the participants
+    const roomID = socketToRoom[socket.id];
+    let room = users[roomID];
 
-  //user call là người đang gọi, signal_data để mình chuyển video/audio/image cho phía bên kia
-  socket.on('call_user', ({ user_call, signal_data, from, name }) => {
-    console.log(`user with id: ${socket.id} is calling`);
-    socket.to(user_call).emit('call_user', { signal: signal_data, from: from, name: name });
-  });
+    if (room) {
+      // finding the person who left the room
+      // creating a new array with the remaining people
+      room = room.filter((id) => id !== socket.id);
+      users[roomID] = room;
+    }
 
-  socket.on('answer_call', (data) => {
-    console.log(`user with id: ${socket.id} answering call`);
-    socket.to(data.to).emit('call_accepted', data.signal);
-  });
-
-  socket.on('message', (msg) => {
-    console.log(`msg is ${msg} from ${socket.id}`);
-    socket.emit('message', msg);
+    // emiting a signal and sending it to everyone that a user left
+    socket.broadcast.emit('user left', socket.id);
   });
 };
 
