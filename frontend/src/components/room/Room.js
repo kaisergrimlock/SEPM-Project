@@ -190,7 +190,7 @@ export const Room = (props) => {
   // Hanging up the call
   function hangUp() {
     userStream.current.getVideoTracks()[0].enabled = false;
-    window.location.replace("/CreateRoomGroup");
+    window.location.replace("/");
   }
 
   return (
@@ -213,4 +213,39 @@ export const Room = (props) => {
       />
     </div>
   );
+  // (
+  //   <div class="row group-call">
+  //     <div col="col-12">
+  //       <div class="videos">
+  //         <video
+  //           class="groupVideo"
+  //           muted
+  //           ref={userVideo}
+  //           autoPlay
+  //           playsInline
+  //         />
+  //         {peers.map((peer) => {
+  //           return (
+  //             <Video class="groupVideo" key={peer.peerID} peer={peer.peer} />
+  //           );
+  //         })}
+  //       </div>
+
+  //       <div id="button-box">
+  //         <button id="av" onClick={toggleAudio}>
+  //           {" "}
+  //           <i class="fas fa-microphone-slash"></i>{" "}
+  //         </button>
+  //         <button id="end" onClick={hangUp}>
+  //           {" "}
+  //           <i class="fas fa-phone-square-alt fa-3x"></i>{" "}
+  //         </button>
+  //         <button id="avv" onClick={toggleVideo}>
+  //           {" "}
+  //           <i class="fas fa-video"></i>{" "}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 };
