@@ -14,7 +14,7 @@ const createUser = async (name, email, password) => {
 const getUserById = async (userId) => {
   const user = await UserModel.findById(userId);
 
-  return user;
+  return { user };
 };
 
 const getUserByEmail = async (email) => {

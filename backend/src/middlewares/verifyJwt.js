@@ -2,7 +2,7 @@ const Error = require('../config/constant/Error');
 const { ResponseService, JwtService } = require('../services');
 const { catchAsync } = require('../utils');
 
-module.exports = catchAsync(async (req, res, next) => {
+const verifyJwt = catchAsync(async (req, res, next) => {
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
   const authHeader = req.headers.authorization;
   if (!authHeader) throw ResponseService.newError(Error.AuthHeaderMissing.errCode, Error.AuthHeaderMissing.errMessage);
@@ -13,3 +13,4 @@ module.exports = catchAsync(async (req, res, next) => {
 
   next();
 });
+module.exports = verifyJwt;

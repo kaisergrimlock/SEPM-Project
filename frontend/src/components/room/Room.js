@@ -42,7 +42,7 @@ export const Room = (props) => {
     return <video class="groupVideo" playsInline autoPlay ref={ref} />;
   };
 
-  // // setting the constraints of video box
+  // setting the constraints of video box
   // const videoConstraints = {
   //   height: window.innerHeight / 2,
   //   width: window.innerWidth / 2,

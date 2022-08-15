@@ -4,5 +4,6 @@
 const QrCodeRouter = require('./qrCode.router');
 const AuthRouter = require('./auth.router');
 const ImgRouter = require('./imageUpload.router');
+const UserRouter = require('./user.router');
 
-module.exports = { QrCodeRouter, AuthRouter, ImgRouter };
+module.exports = { QrCodeRouter, AuthRouter, ImgRouter, UserRouter };
