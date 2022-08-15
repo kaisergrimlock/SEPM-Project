@@ -2,30 +2,8 @@ const connection = (socket) => {
   /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
 
   // room object to store the created room IDs
-  const rooms = {};
   const users = {};
   const socketToRoom = {};
-
-  // when the user is forming a connection with socket.io
-  // handling one on one video call (Used)
-  socket.on('join room', (roomID) => {
-    // if the room is already created, that means a person has already joined the room
-    // then take the new user and push them into the same room
-    // else create a new room
-    if (rooms[roomID]) {
-      rooms[roomID].push(socket.id);
-    } else {
-      rooms[roomID] = [socket.id];
-    }
-
-    // finding otherUSer - see if id is of the other user
-    const otherUser = rooms[roomID].find((id) => id !== socket.id);
-    // if someone has joined then we get the id of the other user
-    if (otherUser) {
-      socket.emit('other user', otherUser);
-      socket.to(otherUser).emit('user joined', socket.id);
-    }
-  });
 
   // handling Group Video Call (Used)
   socket.on('join room group', (roomID) => {
