@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DisplaySvg } from "../displaySvg/DisplaySvg";
 import teamLogo from "../../assets/svg/teamLogo.svg";
 import facebook from "../../assets/svg/facebook.svg";
@@ -8,11 +8,6 @@ import gmail from "../../assets/svg/gmail.svg";
 import linkedin from "../../assets/svg/linkedin.svg";
 
 export const Footer = () => {
-  const navigate = useNavigate();
-
-  const navigateToAbout = () => {
-    navigate("/about");
-  };
   return (
     <footer className="footer-container">
       <div className="footer w-full h-auto bg-navy md:flex justify-start text-white pt-5">
@@ -85,10 +80,10 @@ export const Footer = () => {
                 <Link to="/" className="hover:opacity-50 duration-300">Integrations</Link>
               </li>
               <li className="my-5">
-                <Link to="/" className="hover:opacity-50 duration-300">Developers</Link>
+                <Link to="/aboutus" className="hover:opacity-50 duration-300">Developers</Link>
               </li>
               <li className="my-5">
-                <Link to="/" className="hover:opacity-50 duration-300">Students</Link>
+                <Link to="/aboutus" className="hover:opacity-50 duration-300">Students</Link>
               </li>
             </ul>
           </div>
@@ -98,7 +93,7 @@ export const Footer = () => {
           <h1 className="text-[22px] font-semibold">Team</h1>
           <ul className="my-5 leading-8 text-[14px]">
             <li className="my-5">
-              <Link to="/" className="hover:opacity-50 duration-300">About us</Link>
+              <Link to="/ourmission" className="hover:opacity-50 duration-300">About us</Link>
             </li>
             <li className="my-5">
               <Link to="/" className="hover:opacity-50 duration-300">Contact us</Link>

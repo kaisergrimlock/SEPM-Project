@@ -18,7 +18,7 @@ export const Navbar = (props) => {
 
   return (
     <nav
-      className={`navbar flex justify-between text-lg py-3 fixed w-full duration-300  items-center font-avenir ${isScrolled ? "bg-lightGray" : "bg-none"}`}
+      className={`navbar flex justify-between text-lg py-3 fixed w-full duration-300  items-center z-20 font-avenir ${isScrolled ? "bg-lightGray" : "bg-none"}`}
       id="desktop-navbar"
     >
       <div className="logo px-5">

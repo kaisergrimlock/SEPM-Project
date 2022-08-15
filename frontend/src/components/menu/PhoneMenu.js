@@ -20,7 +20,7 @@ export const PhoneMenu = (props) => {
               <>
                 <li>
                   <Link
-                    to="/about"
+                    to="/ourmission"
                     className="hover:opacity-50 duration-300 py-5 block w-full"
                   >
                     Our misson

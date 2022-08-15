@@ -14,7 +14,7 @@ export const Menu = (props) => {
         <ul className="text-center text-base flex">
           <li className="mx-5">
             <Link
-              to="/about"
+              to="/ourmission"
               className="hover:opacity-70 duration-300 py-5 inline-block w-full"
             >
               Our mission
