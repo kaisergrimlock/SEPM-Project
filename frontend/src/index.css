@@ -26,16 +26,22 @@
     }
   }
 
-  #dev-info > * {
+  #dev-card:hover #dev-info-container{
+    background:none;
+    transition: all 0.3s ease;
+  }
+
+  #dev-info-container > * {
     transform: translateY(20px);
     transition: 0.3s;
   }
   
-  #dev-info:hover {
+  #dev-info-container:hover .dev-info{
     opacity: 1;
     transition: all 0.3s ease;
+    
   }
   
-  #dev-info:hover > * {
+  #dev-info-container:hover > * {
     transform: translateY(0);
   }
