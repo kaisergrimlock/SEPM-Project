@@ -174,30 +174,33 @@ export const Room = (props) => {
   }
 
   // Toggle Audio
-  let isAudio = true;
-  let colorAudio = "#bc1823";
-  function toggleAudio() {
-    document.getElementById("av").style.backgroundColor = colorAudio;
-    if (isAudio) {
-      colorAudio = "#302b70";
-    } else {
-      colorAudio = "#bc1823";
-    }
-    isAudio = !isAudio;
-    userStream.current.getAudioTracks()[0].enabled = isAudio;
+
+  function toggleAudio(isMutedState) {
+    userStream.current.getAudioTracks()[0].enabled = isMutedState;
   }
 
   // Hanging up the call
-  function hangUp() {
-    userStream.current.getVideoTracks()[0].enabled = false;
+  function handleHangUp() {
+    userStream.current.getAudioTracks()[0].enabled = false;
     window.location.replace("/");
   }
 
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
-      <RoomHeader meetingRoomId={meetingRoomId} handleImages={handleImages} />
+      <RoomHeader
+        meetingRoomId={meetingRoomId}
+        handleImages={handleImages}
+        handleHangUp={handleHangUp}
+        toggleAudio={toggleAudio}
+      />
       <div class="videos">
-        <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
+        <video
+          class="groupVideo"
+          unmuted
+          ref={userVideo}
+          autoPlay
+          playsInline
+        />
         {peers.map((peer) => {
           return (
             <Video class="groupVideo" key={peer.peerID} peer={peer.peer} />
