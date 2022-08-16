@@ -39,7 +39,7 @@ export const Room = (props) => {
       });
     }, []);
 
-    return <audio muted playsInline autoPlay ref={ref} />;
+    return <video unmuted playsInline autoPlay ref={ref} />;
   };
 
   // setting the constraints of video box
@@ -474,9 +474,9 @@ export const Room = (props) => {
         toggleAudio={toggleAudio}
       />
       <div class="videos">
-        <audio
+        <video
           class="groupVideo"
-          unmuted
+          muted
           ref={userVideo}
           autoPlay
           playsInline
