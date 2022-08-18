@@ -20,7 +20,7 @@ const io = require('socket.io')(server);
 const { ResponseService, SocketService } = require('./services');
 const Error = require('./config/constant/Error');
 const { globalErrorHandler } = require('./middlewares');
-const { QrCodeRouter, AuthRouter, ImgRouter } = require('./routers');
+const { QrCodeRouter, AuthRouter, ImgRouter, UserRouter } = require('./routers');
 const fileStorage = require('./config/constant/fileStorage');
 const { imgTypeValidator } = require('./utils');
 
@@ -94,6 +94,7 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/auth', AuthRouter);
 app.use('/api/qrCode', QrCodeRouter);
 app.use('/api/uploadImage', ImgRouter);
+app.use('/api/user', UserRouter);
 global._io.on('connection', SocketService.connection);
 // handling all (get,post,update,delete.....) unhandled routes
 app.use('*', (req, res, next) => {

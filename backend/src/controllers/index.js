@@ -4,5 +4,6 @@
 const QrCodeController = require('./qrCode.controller');
 const AuthController = require('./auth.controller');
 const ImageUploaderController = require('./imgUpload.controller');
+const UserController = require('./user.controller');
 
-module.exports = { QrCodeController, AuthController, ImageUploaderController };
+module.exports = { QrCodeController, AuthController, ImageUploaderController, UserController };

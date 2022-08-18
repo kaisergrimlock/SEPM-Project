@@ -11,10 +11,10 @@ const createUser = async (name, email, password) => {
   return user;
 };
 
-const getUserById = async (id) => {
-  const user = await UserModel.findById(id);
+const getUserById = async (userId) => {
+  const user = await UserModel.findById(userId);
 
-  return user;
+  return { user };
 };
 
 const getUserByEmail = async (email) => {

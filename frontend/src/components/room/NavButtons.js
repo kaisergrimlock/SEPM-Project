@@ -5,9 +5,16 @@ import stop from "../../assets/svg/stop.svg";
 import microphone from "../../assets/svg/microphone.svg";
 import muted from "../../assets/svg/muted.svg";
 import upload from "../../assets/svg/upload.svg";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 export const NavButtons = (props) => {
-  const { isMuted, isRecorded, handleRecorded, handleMicrophone, handleImages} = props;
+  const {
+    isMuted,
+    isRecorded,
+    handleRecorded,
+    handleMicrophone,
+    handleImages,
+    handleHangUp,
+  } = props;
 
   return (
     <div className="flex gap-4 items-center">
@@ -39,10 +46,13 @@ export const NavButtons = (props) => {
           <DisplaySvg children={microphone} note="record" />
         )}
       </button>
-      <Link to={"/"} className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300">
+      <button
+        onClick={handleHangUp}
+        className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300"
+      >
         {" "}
         Leave{" "}
-      </Link>
+      </button>
     </div>
   );
 };

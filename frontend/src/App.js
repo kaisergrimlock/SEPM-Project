@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { MeetingRoom } from "./views/MeetingRoom";
 import { CreateRoom } from "./views/CreateRoom";
 import { OurMission } from "./views/OurMission";
+import { AboutUs } from "./views/AboutUs";
 
 // import io from 'socket.io-client';
 // const io = io.connect('http://localhost:3000');
@@ -26,7 +27,8 @@ function App() {
               element={<MeetingRoom />}
             ></Route>
             <Route path="/create" element={<CreateRoom />}></Route>
-            <Route path="/about" element={<OurMission />}></Route>
+            <Route path="/ourmission" element={<OurMission />}></Route>
+            <Route path="/aboutus" element={<AboutUs />}></Route>
           </Routes>
         </AuthProvider>
       </Router>

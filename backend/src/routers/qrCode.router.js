@@ -4,7 +4,7 @@ const { verifyJwt } = require('../middlewares');
 
 const router = express.Router();
 
-router.route('/').get(verifyJwt, QrCodeController.redirect);
+router.route('/').post(verifyJwt, QrCodeController.redirect);
 
 router.route('/scan').post(verifyJwt, QrCodeController.scanQr);
 
