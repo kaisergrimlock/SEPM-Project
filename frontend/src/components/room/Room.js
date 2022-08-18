@@ -394,19 +394,40 @@ export const Room = (props) => {
     return currentPeer;
   }
 
-  // Toggle Video
-  let isVideo = true;
-  let colorVideo = "#bc1823";
-  function toggleVideo() {
-    document.getElementById("avv").style.backgroundColor = colorVideo;
-    if (isVideo) {
-      colorVideo = "#302b70";
-    } else {
-      colorVideo = "#bc1823";
-    }
-    isVideo = !isVideo;
-    userStream.current.getVideoTracks()[0].enabled = isVideo;
+  //ImageUpload
+  var setImageSrc = (elm) => {
+    var fr = new FileReader();
+    fr.onload = () => (src = fr.result);
+    fr.readAsArrayBuffer(elm.files[0])
   }
+
+  var submitImg = () => io.emit('submitImg', src)
+
+  io.on('sentImg', (src) => {
+    // Create Img...
+    var img = document.createElement('img')
+    img.src = (window.URL || window.webkitURL).createObjectURL(
+      new Blob([src], { type: 'image/png' })
+    )
+    img.width = 200
+    img.height = 200
+    document.querySelector('div').append(img)
+  })
+
+
+  // Toggle Video
+  // let isVideo = true;
+  // let colorVideo = "#bc1823";
+  // function toggleVideo() {
+  //   document.getElementById("avv").style.backgroundColor = colorVideo;
+  //   if (isVideo) {
+  //     colorVideo = "#302b70";
+  //   } else {
+  //     colorVideo = "#bc1823";
+  //   }
+  //   isVideo = !isVideo;
+  //   userStream.current.getVideoTracks()[0].enabled = isVideo;
+  // }
 
   // Toggle Audio
 

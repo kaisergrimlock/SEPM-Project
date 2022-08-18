@@ -59,6 +59,14 @@ const connection = (socket) => {
     // emiting a signal and sending it to everyone that a user left
     socket.to(room).emit('user left', socket.id);
   });
+
+  //Image uploading
+  socket.on('submitImg', (src) => {
+    console.log('Client sent image' + src)
+
+    //Client submit an image
+    socket.emit('sentImg', src) //the server send the image src to all clients
+  })
 };
 
 module.exports = { connection };
