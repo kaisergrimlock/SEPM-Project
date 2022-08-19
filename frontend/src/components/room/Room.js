@@ -221,72 +221,38 @@ export const Room = (props) => {
               (id) => id !== socketRef.current.id
             );
             console.log("other peers except current peer: ", otherUsers);
+            const ids = otherUsers.map((o) => o.peerID);
+            const filtered = peersRef.current.filter(
+              ({ id }, index) => !ids.includes(id, index + 1)
+            );
 
+            peersRef.current = filtered;
             // adding the other user to the room
-            if (otherUsers.length > peersRef.current.length) {
-              if (peersRef.current.length === 0) {
-                console.log(
-                  "peeersRef before for loop length = 0: ",
-                  peersRef.current
-                );
-                const ids = peersRef.current.map((o) => o.peerID);
-                const filtered = peersRef.current.filter(
-                  ({ id }, index) => !ids.includes(id, index + 1)
-                );
-
-                peersRef.current = filtered;
-                for (let i = 0; i < otherUsers.length; i++) {
-                  const peer = createOtherPeer(
-                    otherUsers[i],
-                    socketRef.current.id,
-                    stream
-                  );
-                  peersRef.current.push({
-                    peerID: otherUsers[i],
-                    peer,
-                  });
-                  peers.push({
-                    peerID: otherUsers[i],
-                    peer,
-                  });
-                  console.log(
-                    "peeersRef after for loop in length = 0: ",
-                    peersRef.current
-                  );
-                }
-              } else {
-                for (let i = 0; i < otherUsers.length; i++) {
-                  let isAlreadyInPeersRef = false;
-                  for (let j = 0; j < peersRef.current.length; j++) {
-                    if (
-                      Object.values(peersRef.current[j]).includes(otherUsers[i])
-                    ) {
-                      isAlreadyInPeersRef = true;
-                    }
-                  }
-                  if (!isAlreadyInPeersRef) {
-                    const peer = createOtherPeer(
-                      otherUsers[i],
-                      socketRef.current.id,
-                      stream
-                    );
-                    peersRef.current.push({
-                      peerID: otherUsers[i],
-                      peer,
-                    });
-                    peers.push({
-                      peerID: otherUsers[i],
-                      peer,
-                    });
-                  }
-                }
-              }
-            }
 
             console.log(
-              "all peers in this room after new user joined in: ",
+              "peeersRef before for loop length = 0: ",
               peersRef.current
             );
+            for (let i = 0; i < otherUsers.length; i++) {
+              const peer = createOtherPeer(
+                otherUsers[i],
+                socketRef.current.id,
+                stream
+              );
+              peersRef.current.push({
+                peerID: otherUsers[i],
+                peer,
+              });
+              peers.push({
+                peerID: otherUsers[i],
+                peer,
+              });
+              console.log(
+                "peeersRef after for loop in length = 0: ",
+                peersRef.current
+              );
+            }
+
             setPeers(peers);
           }
         });
@@ -301,15 +267,15 @@ export const Room = (props) => {
           console.log(
             `sending signal from ${payload.currentPeerSocketId} to current socket user ${socketRef.current.id}`
           );
-          peersRef.current.push({
-            peerID: payload.currentPeerSocketId,
-            peer: currentPeer,
-          });
-          const peerObj = {
-            peerID: payload.currentPeerSocketId,
-            peer: currentPeer,
-          };
-          setPeers((users) => [...users, peerObj]);
+          // peersRef.current.push({
+          //   peerID: payload.currentPeerSocketId,
+          //   peer: currentPeer,
+          // });
+          // const peerObj = {
+          //   peerID: payload.currentPeerSocketId,
+          //   peer: currentPeer,
+          // };
+          // setPeers((users) => [...users, peerObj]);
         });
 
         // exisisting users recieving the signal
@@ -319,19 +285,23 @@ export const Room = (props) => {
         });
 
         // handling user disconnecting
-        socketRef.current.on("user left", (id) => {
-          console.log("user left with socket id: ", id);
+        socketRef.current.on("user left", (payload) => {
+          console.log("user left with socket id: ", payload.userLeft);
           // finding the id of the peer who just left
-          const peerObj = peersRef.current.find((p) => p.peerID === id);
+          const peerObj = peersRef.current.find(
+            (p) => p.peerID === payload.userLeft
+          );
           if (peerObj) {
             peerObj.peer.destroy();
           }
-          console.log(`peers before filter`, peersRef.current);
           // removing the peer from the arrays and storing remaining peers in new array
-          const peers = peersRef.current.filter((p) => p.peerID !== id);
-          peersRef.current = peers;
-          console.log(`peers after filter`, peersRef.current);
-          setPeers(peers);
+          const newPeers = peersRef.current.filter(
+            (p) => p.peerID !== payload.userLeft
+          );
+          peersRef.current = newPeers;
+          console.log(`peers after someone left`, peersRef.current);
+
+          setPeers(newPeers);
         });
       });
   }, []);
@@ -350,6 +320,9 @@ export const Room = (props) => {
     console.log(
       "create other Peers when current Peer joined and send signal for the others"
     );
+    otherPeer.on("error", function (err) {
+      console.log("err: ", err);
+    });
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(
@@ -375,11 +348,12 @@ export const Room = (props) => {
       stream,
     });
 
+    currentPeer.on("error", function (err) {
+      console.log("err: ", err);
+    });
+
     currentPeer.on("signal", (currentPeerSignal) => {
-      console.log(
-        "insde the currentPeer otherPeer signal: ",
-        currentPeerSignal
-      );
+      console.log("insde the currentPeer signal: ", currentPeerSignal);
       console.log(
         "insde the client currentPeer signal peerRefs: ",
         peersRef.current
@@ -391,6 +365,7 @@ export const Room = (props) => {
     });
 
     currentPeer.signal(currentPeerSignal);
+
     return currentPeer;
   }
 
@@ -440,6 +415,7 @@ export const Room = (props) => {
     userStream.current.getAudioTracks()[0].enabled = false;
     window.location.replace("/");
   }
+
   console.log(peersRef.current);
   console.log(peers);
 
@@ -453,7 +429,7 @@ export const Room = (props) => {
       />
       <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
-        {peersRef.current.map((peer) => {
+        {peers.map((peer) => {
           return (
             <Video class="groupVideo" key={peer.peerID} peer={peer.peer} />
           );
