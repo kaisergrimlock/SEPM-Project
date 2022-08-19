@@ -35,7 +35,7 @@ const connection = (socket) => {
   // signal recieved by the user who joined (Used)
   socket.on('returning signal back to the others', (payload) => {
     // console.log('insde the currentPeer otherPeer signal: ', payload.currentPeerSignal);
-    console.log('inside the cserverlient currentPeer signal socketId: ', payload.currentPeerSocketId);
+    console.log('inside the server currentPeer signal socketId: ', payload.currentPeerSocketId);
     global._io.to(payload.currentPeerSocketId).emit('receiving returned signal', {
       signal: payload.currentPeerSignal,
       id: socket.id,
@@ -47,6 +47,7 @@ const connection = (socket) => {
     // getting the room array with all the participants
     const roomID = socketToRoom[socket.id];
     let room = users[roomID];
+    console.log(`current user left with id: ${socket.id}`);
     console.log(`current room users before delete left user: ${room}`);
     if (room) {
       // finding the person who left the room
@@ -55,9 +56,8 @@ const connection = (socket) => {
       users[roomID] = room;
     }
     console.log(`current room users after delete left user: ${room}`);
-
     // emiting a signal and sending it to everyone that a user left
-    socket.to(room).emit('user left', socket.id);
+    socket.to(room).emit('user left', { userLeft: socket.id, room });
   });
 };
 
