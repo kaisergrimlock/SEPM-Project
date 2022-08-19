@@ -62,10 +62,11 @@ const connection = (socket) => {
 
   //Image uploading
   socket.on('submitImg', (filePreview) => {
+    const roomID = socketToRoom[socket.id];
+    let room = users[roomID];
     console.log('Client sent image' + filePreview)
-
     //Client submit an image
-    socket.emit('sentImg', filePreview) //the server send the image src to all clients
+    socket.to(room).emit('sentImg', filePreview) //the server send the image src to all clients
   })
 };
 

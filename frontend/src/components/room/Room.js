@@ -211,12 +211,14 @@ export const Room = (props) => {
         userStream.current = stream;
 
         socketRef.current.emit("join room group", meetingRoomId);
-
+        //Get image
         socketRef.current.on('sentImg', (filePreview) => {
           console.log('image preview' + filePreview);
           setCurrentImage(filePreview);
           setImages((prevImage) => [...prevImage, filePreview]);
         })
+
+        // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
 
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
