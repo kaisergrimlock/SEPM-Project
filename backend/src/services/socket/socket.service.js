@@ -67,6 +67,7 @@ const connection = (socket) => {
     console.log('Client sent image' + filePreview)
     //Client submit an image
     socket.to(room).emit('sentImg', filePreview) //the server send the image src to all clients
+    socket.emit('sentImg', filePreview);
   })
 };
 
