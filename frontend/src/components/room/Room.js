@@ -8,21 +8,14 @@ import { RoomContent } from "./RoomContent";
 
 export const Room = (props) => {
   const [images, setImages] = useState([]);
-
-  let [currentImage, setCurrentImage] = useState("");
-
-  const [colorPicked, setColorPicked] = useState("#6DA8D6");
   const handleClickedImage = (id) => {
     setCurrentImage(images[id]);
     // console.log(currentImage)
   };
 
-  let handleImages = (e) => {
-    const filePreview = URL.createObjectURL(e.target.files[0]);
-    setCurrentImage(filePreview);
-    setImages((prevImage) => [...prevImage, filePreview]);
-  };
+  let [currentImage, setCurrentImage] = useState("");
 
+  const [colorPicked, setColorPicked] = useState("#6DA8D6");
   const onChangeColorPicked = (e, cursorImage) => {
     setColorPicked(e.target.value);
     document.body.style.cursor = `url(${currentImage})`;
@@ -200,6 +193,12 @@ export const Room = (props) => {
   const userStream = useRef();
   const meetingRoomId = props.meetingRoomId;
 
+  //Images
+  let handleImages = (e) => {
+    const filePreview = URL.createObjectURL(e.target.files[0]);
+    socketRef.current.emit('submitImg', filePreview);
+  };
+
   useEffect(() => {
     socketRef.current = io.connect("/");
 
@@ -212,6 +211,12 @@ export const Room = (props) => {
         userStream.current = stream;
 
         socketRef.current.emit("join room group", meetingRoomId);
+
+        socketRef.current.on('sentImg', (filePreview) => {
+          console.log('image preview' + filePreview);
+          setCurrentImage(filePreview);
+          setImages((prevImage) => [...prevImage, filePreview]);
+        })
 
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
@@ -368,26 +373,6 @@ export const Room = (props) => {
 
     return currentPeer;
   }
-
-  //ImageUpload
-  var setImageSrc = (elm) => {
-    var fr = new FileReader();
-    fr.onload = () => (src = fr.result);
-    fr.readAsArrayBuffer(elm.files[0])
-  }
-
-  var submitImg = () => io.emit('submitImg', src)
-
-  io.on('sentImg', (src) => {
-    // Create Img...
-    var img = document.createElement('img')
-    img.src = (window.URL || window.webkitURL).createObjectURL(
-      new Blob([src], { type: 'image/png' })
-    )
-    img.width = 200
-    img.height = 200
-    document.querySelector('div').append(img)
-  })
 
 
   // Toggle Video
