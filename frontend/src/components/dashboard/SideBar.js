@@ -6,7 +6,7 @@ import { ButtonList } from "./button_list/ButtonList";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 
-export const SideBar = () => {
+export const SideBar = ({name}) => {
   let { logoutUser } = useContext(AuthContext);
 
   return (
@@ -16,7 +16,7 @@ export const SideBar = () => {
           <Link to="/">
             <DisplaySvg children={teamLogo} note={"undefined"} />
           </Link>
-          <Info name={"An"} info={"A handsome doctor"} />
+          <Info name={name} info={"A handsome doctor"} />
         </div>
         <ButtonList />
 
