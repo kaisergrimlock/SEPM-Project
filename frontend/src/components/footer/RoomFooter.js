@@ -6,9 +6,16 @@ import redPencil from "../../assets/svg/redPencil.svg";
 import yellowPencil from "../../assets/svg/yellowPencil.svg";
 import pinkPencil from "../../assets/svg/pinkPencil.svg";
 import eraser from "../../assets/svg/eraser.svg";
+import {useState, useEffect} from 'react'
+import QRCode from 'qrcode';
 
 export const RoomFooter = (props) => {
   const { onChangeColorPicked, canvasRef} = props;
+  const [src, setSrc] = useState("");
+
+
+  //Cloudinary 
+  
   
   return (
     <div className="h-[12vh] inline-flex items-center justify-center w-full my-5">
@@ -94,18 +101,45 @@ export const RoomFooter = (props) => {
         </div>
 
         <div>
-          <button
+          <button 
             onClick={() => {
               canvasRef.current.exportImage('png').then(data => {
+                //QRCode.toDataURL(data).then(setSrc)
                 console.log(data)
+                var image = new Image();
+                image.src = data;
+                console.log(image.outerHTML)
+                var w = window.open("about: image");
+                w.document.write(image.outerHTML);
+                w.document.close();
+
+                //Cloudinary 
+                const API_ENDPOINT = 'https://api.cloudinary.com/v1_1/dzicvcojs/upload';
+ 
+                const fileData = new FormData();
+                fileData.append('file', data);
+                fileData.append('upload_preset', 'rx60o1gn'); // upload preset
+             
+                fetch(API_ENDPOINT, {
+                  method: 'post',
+                  body: fileData
+                }).then(response => response.json())
+                  .then(data => console.log('Success:', data))
+                  .catch(err => console.error('Error:', err));
+
               }).catch(e => {
                 console.log(e)
               })
+
+              
             }}
             className="bg-red-500 text-white h-[50px] px-5 rounded-md"
           >
             Download
           </button>
+        </div>
+        <div>
+            <img src={src}></img>
         </div>
       </div>
     </div>

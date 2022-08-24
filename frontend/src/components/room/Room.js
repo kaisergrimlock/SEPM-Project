@@ -5,6 +5,7 @@ import Peer from "simple-peer";
 import { RoomHeader } from "../header/RoomHeader";
 // import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
+import { ReactMediaRecorder } from "react-media-recorder";
 
 export const Room = (props) => {
   const [images, setImages] = useState([]);
@@ -414,6 +415,19 @@ export const Room = (props) => {
         handleHangUp={handleHangUp}
         toggleAudio={toggleAudio}
       />
+        <div>
+        <ReactMediaRecorder
+          screen
+          render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+            <div>
+              <p>{status}</p>
+              <button onClick={startRecording}>Start Recording</button>
+              <button onClick={stopRecording}>Stop Recording</button>
+              <video src={mediaBlobUrl} controls autoPlay loop />
+            </div>
+          )}
+        />
+      </div>
       <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
