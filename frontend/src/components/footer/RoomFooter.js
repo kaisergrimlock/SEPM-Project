@@ -125,6 +125,7 @@ export const RoomFooter = (props) => {
                   body: fileData
                 }).then(response => response.json())
                   .then(data => console.log('Success:', data))
+                  .then(data => console.log(data.url))
                   .catch(err => console.error('Error:', err));
 
               }).catch(e => {
