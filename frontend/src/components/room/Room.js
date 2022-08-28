@@ -320,13 +320,10 @@ export const Room = (props) => {
           const newPeers = peersRef.current.filter(
             (p) => p.peerID !== payload.userLeft
           );
-          // Reset current users and socketToRoom and establish connection between them again
-          peersRef.current = [];
+          peersRef.current = newPeers;
           console.log(`peers after someone left`, peersRef.current);
 
-          setPeers([]);
-          //  establish connection between them again
-          socketRef.current.emit("join room group", meetingRoomId);
+          setPeers(newPeers);
         });
       });
   }, []);
@@ -348,7 +345,6 @@ export const Room = (props) => {
     otherPeer.on("error", function (err) {
       console.log("err: ", err);
     });
-    
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(

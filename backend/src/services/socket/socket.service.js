@@ -1,6 +1,6 @@
 // room object to store the created room IDs
-let users = {};
-let socketToRoom = {};
+const users = {};
+const socketToRoom = {};
 
 const connection = (socket) => {
   /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
