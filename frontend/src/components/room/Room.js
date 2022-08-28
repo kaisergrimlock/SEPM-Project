@@ -175,6 +175,9 @@ export const Room = (props) => {
       props.peer.on("stream", (stream) => {
         ref.current.srcObject = stream;
       });
+
+      console.log("PeerID", props.peerID);
+      console.log("Peer", props.peer);
     }, []);
 
     return <video class="groupVideo" playsInline autoPlay ref={ref} />;
@@ -308,10 +311,13 @@ export const Room = (props) => {
           const newPeers = peersRef.current.filter(
             (p) => p.peerID !== payload.userLeft
           );
-          peersRef.current = newPeers;
+          // Reset current users and socketToRoom and establish connection between them again
+          peersRef.current = [];
           console.log(`peers after someone left`, peersRef.current);
 
-          setPeers(newPeers);
+          setPeers([]);
+          //  establish connection between them again
+          socketRef.current.emit("join room group", meetingRoomId);
         });
       });
   }, []);
@@ -333,6 +339,7 @@ export const Room = (props) => {
     otherPeer.on("error", function (err) {
       console.log("err: ", err);
     });
+    
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(

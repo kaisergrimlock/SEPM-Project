@@ -16,6 +16,7 @@ export const RoomHeader = (props) => {
     setIsMuted((state) => !state);
   };
 
+  const { meetingRoomId } = useParams();
   return (
     <header className="bg-navy flex items-center py-3 px-5 justify-between text-white">
       <span className="flex gap-4 items-center">
