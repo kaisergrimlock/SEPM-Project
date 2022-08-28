@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
-// import { RoomFooter } from "../footer/RoomFooter";
+import { RoomFooter } from "../footer/RoomFooter";
 import { RoomHeader } from "../header/RoomHeader";
-// import { NavButtons } from "./NavButtons";
+import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
 import { ReactMediaRecorder } from "react-media-recorder";
 
@@ -326,10 +326,11 @@ export const Room = (props) => {
           const newPeers = peersRef.current.filter(
             (p) => p.peerID !== payload.userLeft
           );
-          peersRef.current = newPeers;
+          peersRef.current = [];
           console.log(`peers after someone left`, peersRef.current);
-
-          setPeers(newPeers);
+          socketRef.current.emit("join room group", meetingRoomId);
+          setPeers([]);
+          socketRef.current.emit("join room group", meetingRoomId);
         });
       });
     return () => {

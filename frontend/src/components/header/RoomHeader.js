@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom";
 import { DisplaySvg } from "../displaySvg/DisplaySvg";
 import { NavButtons } from "../room/NavButtons";
 import recording from "../../assets/svg/recording.svg";
-import { useParams } from "react-router";
 export const RoomHeader = (props) => {
-  // const { handleImages, handleHangUp, toggleAudio } = props;
+  const { handleImages, handleHangUp, toggleAudio } = props;
   const [isRecorded, setIsRecorded] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -38,8 +37,8 @@ export const RoomHeader = (props) => {
         isMuted={isMuted}
         handleRecorded={handleRecorded}
         handleMicrophone={handleMicrophone}
-        // handleImages={handleImages}
-        // handleHangUp={handleHangUp}
+        handleImages={handleImages}
+        handleHangUp={handleHangUp}
       />
     </header>
   );
