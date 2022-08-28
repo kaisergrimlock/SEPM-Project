@@ -54,7 +54,6 @@ const connection = (socket) => {
       room = room.filter((id) => id !== socket.id);
       users[roomID] = room;
     }
-    console.log(`current room users after delete left user: ${usersInThisRoom}`);
     // Reset current users and socketToRoom and establish connection between them again
     users = {};
     socketToRoom = {};

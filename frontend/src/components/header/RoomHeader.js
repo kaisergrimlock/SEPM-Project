@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { DisplaySvg } from "../displaySvg/DisplaySvg";
 import { NavButtons } from "../room/NavButtons";
 import recording from "../../assets/svg/recording.svg";

@@ -201,6 +201,12 @@ export const Room = (props) => {
   let handleImages = (e) => {
     const filePreview = URL.createObjectURL(e.target.files[0]);
     socketRef.current.emit('submitImg', filePreview);
+    peersRef.current = [];
+    console.log(`peers after someone left`, peersRef.current);
+
+    setPeers([]);
+    //  establish connection between them again
+    socketRef.current.emit("join room group", meetingRoomId);
   };
 
   useEffect(() => {
@@ -222,6 +228,12 @@ export const Room = (props) => {
           console.log('image preview' + filePreview);
           setCurrentImage(filePreview);
           setImages((prevImage) => [...prevImage, filePreview]);
+          peersRef.current = [];
+          console.log(`peers after someone left`, peersRef.current);
+
+          setPeers([]);
+          //  establish connection between them again
+          socketRef.current.emit("join room group", meetingRoomId);
         })
 
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
