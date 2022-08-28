@@ -7,7 +7,7 @@ import stethoscope from "../assets/svg/stethoscope.svg";
 import doctorList from "../assets/svg/doctorList.svg";
 import advertisement from "../assets/svg/advertisement.svg"
 
-export const HomePage = () => {  
+export const HomePage = () => {
   return (
     <>
       <Header image={advertisement}/>
