@@ -1,138 +1,172 @@
-import React, { createContext, useState, useRef, useEffect } from "react";
-import { io } from "socket.io-client";
-import Peer from "simple-peer";
-import RecordRTC from "./RecordRTC";
+// import React, { createContext, useState, useRef, useEffect } from "react";
+// import { io } from "socket.io-client";
+// import Peer from "simple-peer";
+// import RecordRTC from "./RecordRTC";
 
-const SocketContext = createContext();
+// const SocketContext = createContext();
 
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
-const ContextProvider = ({ children }) => {
-  const [callAccepted, setCallAccepted] = useState(false);
-  const [callEnded, setCallEnded] = useState(false);
-  const [stream, setStream] = useState("");
-  const [call, setCall] = useState({});
-  const [me, setMe] = useState("");
-  const [name, setName] = useState("");
+// const ContextProvider = ({ children }) => {
+//   const [callAccepted, setCallAccepted] = useState(false);
+//   const [callEnded, setCallEnded] = useState(false);
+//   const [stream, setStream] = useState("");
+//   const [call, setCall] = useState({});
+//   const [me, setMe] = useState("");
+//   const [name, setName] = useState("");
 
-  const myVideo = useRef();
-  const userVideo = useRef();
-  const connectionRef = useRef();
+//   const myVideo = useRef();
+//   const userVideo = useRef();
+//   const connectionRef = useRef();
 
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((currentStream) => {
-        setStream(currentStream);
+//   useEffect(() => {
+//     navigator.mediaDevices
+//       .getUserMedia({ video: true, audio: true })
+//       .then((currentStream) => {
+//         setStream(currentStream);
 
-        myVideo.current.srcObject = currentStream;
-      })
-      .then(async (myVideo) => {
-        let recorder = RecordRTC(myVideo, {
-          type: "audio",
-        });
-        recorder.startRecording();
+// <<<<<<< HEAD
+//             myVideo.current.srcObject = currentStream;
+//           }).then(async (myVideo) => {
+//               let recorder = RecordRTC(myVideo, {
+//                 type: 'audio',
+//               });
+//               recorder.startRecording();
+        
+//               const sleep = m => new Promise(r => setTimeout(r, m));
+//               await sleep(3000);
+        
+//               recorder.stopRecording(function() {
+//                 let blob = recorder.getBlob();
+//               });
+//             })
 
-        const sleep = (m) => new Promise((r) => setTimeout(r, m));
-        await sleep(3000);
+//         socket.on('me', (id) => setMe(id));
+//         socket.on('callUser', ({ from, name: callerName, signal }) => {
+//           setCall({ isReceivingCall: true, from, name: callerName, signal });
+//         })
+//     }, [])
+    
+// //Mute Mic
+//     const muteMic = () => {
+//         myVideo.getAudioTracks().forEach(track => {
+//             track.disable();
+// =======
+//         myVideo.current.srcObject = currentStream;
+//       })
+//       .then(async (myVideo) => {
+//         let recorder = RecordRTC(myVideo, {
+//           type: "audio",
+// >>>>>>> minh-dev
+//         });
+//         recorder.startRecording();
 
-        recorder.stopRecording(function () {
-          let blob = recorder.getBlob();
-          // invokeSaveAsDialog(blob);
-        });
-      });
+// <<<<<<< HEAD
+//     const unMuteMic = () => {
+//       myVideo.getAudioTracks().forEach(track => {
+//           track.enable();
+// =======
+//         const sleep = (m) => new Promise((r) => setTimeout(r, m));
+//         await sleep(3000);
 
-    socket.on("me", (id) => setMe(id));
-    socket.on("callUser", ({ from, name: callerName, signal }) => {
-      setCall({ isReceivingCall: true, from, name: callerName, signal });
-    });
-  }, []);
-  //Mute Mic
-  const muteMic = () => {
-    myVideo.getAudioTracks().forEach((track) => {
-      track.disable();
-    });
-  };
+//         recorder.stopRecording(function () {
+//           let blob = recorder.getBlob();
+//           // invokeSaveAsDialog(blob);
+//         });
+// >>>>>>> minh-dev
+//       });
 
-  const unMuteMic = () => {
-    myVideo.getAudioTracks().forEach((track) => {
-      track.enable();
-    });
-  };
+//     socket.on("me", (id) => setMe(id));
+//     socket.on("callUser", ({ from, name: callerName, signal }) => {
+//       setCall({ isReceivingCall: true, from, name: callerName, signal });
+//     });
+//   }, []);
+//   //Mute Mic
+//   const muteMic = () => {
+//     myVideo.getAudioTracks().forEach((track) => {
+//       track.disable();
+//     });
+//   };
 
-  const answerCall = () => {
-    setCallAccepted(true);
+//   const unMuteMic = () => {
+//     myVideo.getAudioTracks().forEach((track) => {
+//       track.enable();
+//     });
+//   };
 
-    const peer = new Peer({ initiator: false, trickle: false, stream });
+//   const answerCall = () => {
+//     setCallAccepted(true);
 
-    peer.on("signal", (data) => {
-      socket.emit("answerCall", { signal: data, to: call.from });
-    });
+//     const peer = new Peer({ initiator: false, trickle: false, stream });
 
-    peer.on("stream", (currentStream) => {
-      userVideo.current.srcObject = currentStream;
-    });
+//     peer.on("signal", (data) => {
+//       socket.emit("answerCall", { signal: data, to: call.from });
+//     });
 
-    peer.signal(call.signal);
+//     peer.on("stream", (currentStream) => {
+//       userVideo.current.srcObject = currentStream;
+//     });
 
-    connectionRef.current = peer;
-  };
+//     peer.signal(call.signal);
 
-  const callUser = (id) => {
-    const peer = new Peer({ initiator: true, trickle: false, stream });
+//     connectionRef.current = peer;
+//   };
 
-    peer.on("signal", (data) => {
-      socket.emit("callUser", {
-        userToCall: id,
-        signalData: data,
-        from: me,
-        name,
-      });
-    });
+//   const callUser = (id) => {
+//     const peer = new Peer({ initiator: true, trickle: false, stream });
 
-    peer.on("stream", (currentStream) => {
-      userVideo.current.srcObject = currentStream;
-    });
+//     peer.on("signal", (data) => {
+//       socket.emit("callUser", {
+//         userToCall: id,
+//         signalData: data,
+//         from: me,
+//         name,
+//       });
+//     });
 
-    socket.on("callAccepted", (signal) => {
-      setCallAccepted(true);
+//     peer.on("stream", (currentStream) => {
+//       userVideo.current.srcObject = currentStream;
+//     });
 
-      peer.signal(signal);
-    });
+//     socket.on("callAccepted", (signal) => {
+//       setCallAccepted(true);
 
-    connectionRef.current = peer;
-  };
+//       peer.signal(signal);
+//     });
 
-  const leaveCall = () => {
-    setCallEnded(true);
+//     connectionRef.current = peer;
+//   };
 
-    connectionRef.current.destroy();
+//   const leaveCall = () => {
+//     setCallEnded(true);
 
-    window.location.reload();
-  };
+//     connectionRef.current.destroy();
 
-  return (
-    <SocketContext.Provider
-      value={{
-        call,
-        callAccepted,
-        myVideo,
-        userVideo,
-        stream,
-        name,
-        setName,
-        callEnded,
-        me,
-        callUser,
-        leaveCall,
-        answerCall,
-        muteMic,
-        unMuteMic,
-      }}
-    >
-      {children}
-    </SocketContext.Provider>
-  );
-};
+//     window.location.reload();
+//   };
 
-export { ContextProvider, SocketContext };
+//   return (
+//     <SocketContext.Provider
+//       value={{
+//         call,
+//         callAccepted,
+//         myVideo,
+//         userVideo,
+//         stream,
+//         name,
+//         setName,
+//         callEnded,
+//         me,
+//         callUser,
+//         leaveCall,
+//         answerCall,
+//         muteMic,
+//         unMuteMic,
+//       }}
+//     >
+//       {children}
+//     </SocketContext.Provider>
+//   );
+// };
+
+// export { ContextProvider, SocketContext };

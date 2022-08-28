@@ -5,24 +5,18 @@ import Peer from "simple-peer";
 import { RoomHeader } from "../header/RoomHeader";
 // import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
+import { ReactMediaRecorder } from "react-media-recorder";
 
 export const Room = (props) => {
   const [images, setImages] = useState([]);
-
-  let [currentImage, setCurrentImage] = useState("");
-
-  const [colorPicked, setColorPicked] = useState("#6DA8D6");
   const handleClickedImage = (id) => {
     setCurrentImage(images[id]);
     // console.log(currentImage)
   };
 
-  let handleImages = (e) => {
-    const filePreview = URL.createObjectURL(e.target.files[0]);
-    setCurrentImage(filePreview);
-    setImages((prevImage) => [...prevImage, filePreview]);
-  };
+  let [currentImage, setCurrentImage] = useState("");
 
+  const [colorPicked, setColorPicked] = useState("#6DA8D6");
   const onChangeColorPicked = (e, cursorImage) => {
     setColorPicked(e.target.value);
     document.body.style.cursor = `url(${currentImage})`;
@@ -203,6 +197,12 @@ export const Room = (props) => {
   const userStream = useRef();
   const meetingRoomId = props.meetingRoomId;
 
+  //Images
+  let handleImages = (e) => {
+    const filePreview = URL.createObjectURL(e.target.files[0]);
+    socketRef.current.emit('submitImg', filePreview);
+  };
+
   useEffect(() => {
     socketRef.current = io.connect("/");
 
@@ -215,6 +215,16 @@ export const Room = (props) => {
         userStream.current = stream;
 
         socketRef.current.emit("join room group", meetingRoomId);
+
+        
+        //Get image
+        socketRef.current.on('sentImg', (filePreview) => {
+          console.log('image preview' + filePreview);
+          setCurrentImage(filePreview);
+          setImages((prevImage) => [...prevImage, filePreview]);
+        })
+
+        // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
 
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
@@ -379,19 +389,20 @@ export const Room = (props) => {
     return currentPeer;
   }
 
+
   // Toggle Video
-  let isVideo = true;
-  let colorVideo = "#bc1823";
-  function toggleVideo() {
-    document.getElementById("avv").style.backgroundColor = colorVideo;
-    if (isVideo) {
-      colorVideo = "#302b70";
-    } else {
-      colorVideo = "#bc1823";
-    }
-    isVideo = !isVideo;
-    userStream.current.getVideoTracks()[0].enabled = isVideo;
-  }
+  // let isVideo = true;
+  // let colorVideo = "#bc1823";
+  // function toggleVideo() {
+  //   document.getElementById("avv").style.backgroundColor = colorVideo;
+  //   if (isVideo) {
+  //     colorVideo = "#302b70";
+  //   } else {
+  //     colorVideo = "#bc1823";
+  //   }
+  //   isVideo = !isVideo;
+  //   userStream.current.getVideoTracks()[0].enabled = isVideo;
+  // }
 
   // Toggle Audio
 
@@ -416,6 +427,19 @@ export const Room = (props) => {
         handleHangUp={handleHangUp}
         toggleAudio={toggleAudio}
       />
+        <div>
+        <ReactMediaRecorder
+          screen
+          render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+            <div>
+              <p>{status}</p>
+              <button onClick={startRecording}>Start Recording</button>
+              <button onClick={stopRecording}>Stop Recording</button>
+              <video src={mediaBlobUrl} controls autoPlay loop />
+            </div>
+          )}
+        />
+      </div>
       <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
