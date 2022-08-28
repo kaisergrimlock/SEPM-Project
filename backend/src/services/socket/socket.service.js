@@ -1,6 +1,6 @@
 // room object to store the created room IDs
-const users = {};
-const socketToRoom = {};
+let users = {};
+let socketToRoom = {};
 
 const connection = (socket) => {
   /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
@@ -56,8 +56,11 @@ const connection = (socket) => {
       users[roomID] = usersInThisRoom;
     }
     console.log(`current room users after delete left user: ${usersInThisRoom}`);
+    // Reset current users and socketToRoom and establish connection between them again
+    users = {};
+    socketToRoom = {};
     // emiting a signal and sending it to everyone that a user left
-    socket.to(roomID).emit('user left', { userLeft: socket.id, usersInThisRoom });
+    socket.to(roomID).emit('user left', { userLeft: socket.id });
   });
 };
 

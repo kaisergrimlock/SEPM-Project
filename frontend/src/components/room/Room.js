@@ -183,12 +183,7 @@ export const Room = (props) => {
       });
 
       console.log("PeerID", props.peerID);
-
-      props.peer.on("close", function () {
-        ref.current.pause();
-        ref.current.removeAttribute("src");
-        ref.current.load();
-      });
+      console.log("Peer", props.peer);
     }, []);
 
     return <video class="groupVideo" playsInline autoPlay ref={ref} />;
@@ -306,10 +301,13 @@ export const Room = (props) => {
           const newPeers = peersRef.current.filter(
             (p) => p.peerID !== payload.userLeft
           );
-          peersRef.current = newPeers;
+          // Reset current users and socketToRoom and establish connection between them again
+          peersRef.current = [];
           console.log(`peers after someone left`, peersRef.current);
 
-          setPeers(newPeers);
+          setPeers([]);
+          //  establish connection between them again
+          socketRef.current.emit("join room group", meetingRoomId);
         });
       });
     return () => {
@@ -334,6 +332,7 @@ export const Room = (props) => {
     otherPeer.on("error", function (err) {
       console.log("err: ", err);
     });
+    
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(
