@@ -46,18 +46,18 @@ const connection = (socket) => {
   socket.on('disconnect', () => {
     // getting the room array with all the participants
     const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
+    let usersInThisRoom = users[roomID];
     console.log(`current user left with id: ${socket.id}`);
-    console.log(`current room users before delete left user: ${room}`);
-    if (room) {
+    console.log(`current room users before delete left user: ${usersInThisRoom}`);
+    if (usersInThisRoom) {
       // finding the person who left the room
       // creating a new array with the remaining people
-      room = room.filter((id) => id !== socket.id);
-      users[roomID] = room;
+      usersInThisRoom = usersInThisRoom.filter((id) => id !== socket.id);
+      users[roomID] = usersInThisRoom;
     }
-    console.log(`current room users after delete left user: ${room}`);
+    console.log(`current room users after delete left user: ${usersInThisRoom}`);
     // emiting a signal and sending it to everyone that a user left
-    socket.to(room).emit('user left', { userLeft: socket.id, room });
+    socket.to(roomID).emit('user left', { userLeft: socket.id, usersInThisRoom });
   });
 };
 
