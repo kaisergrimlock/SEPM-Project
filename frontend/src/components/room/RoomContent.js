@@ -1,5 +1,4 @@
-import React, { useContext, useRef } from "react";
-import AuthContext from "../../context/AuthContext";
+import React, { useRef } from "react";
 import { RoomFooter } from "../footer/RoomFooter";
 import { ImageList } from "./ImageList";
 import { User } from "./User";
@@ -8,8 +7,6 @@ import { Whiteboard } from "./Whiteboard";
 // import { DisplaySvg } from "../displaySvg/DisplaySvg";
 
 export const RoomContent = (props) => {
-  const {nameList} = useContext(AuthContext)
-
   const { images, currentImage, handleClickedImage, colorPicked, onChangeColorPicked} = props;
   const canvasRef = useRef(null)
 
@@ -24,7 +21,7 @@ export const RoomContent = (props) => {
       </div>
 
       <div className="w-1/5 h-[92vh] bg-lightBlack overflow-y-scroll ">
-        {/* <User username={"User1"} talk="bg-navy/40" />
+        <User username={"User1"} talk="bg-navy/40" />
         <User username={"User2"} talk="bg-none" />
         <User username={"User2"} talk="bg-none" />
         <User username={"User2"} talk="bg-none" />
@@ -32,12 +29,7 @@ export const RoomContent = (props) => {
         <User username={"User2"} talk="bg-none" />
         <User username={"User2"} talk="bg-none" />
         <User username={"User2"} talk="bg-none" />
-        <User username={"User2"} talk="bg-none" /> */}
-        {
-          nameList.map((name, index) => {
-            return <User key={index} username={name} talk="bg-none"/>
-          })
-        }
+        <User username={"User2"} talk="bg-none" />
       </div>
     </div>
   );
