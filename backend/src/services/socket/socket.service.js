@@ -35,7 +35,7 @@ const connection = (socket) => {
   // signal recieved by the user who joined (Used)
   socket.on('returning signal back to the others', (payload) => {
     // console.log('insde the currentPeer otherPeer signal: ', payload.currentPeerSignal);
-    console.log('inside the cserverlient currentPeer signal socketId: ', payload.currentPeerSocketId);
+    console.log('inside the server currentPeer signal socketId: ', payload.currentPeerSocketId);
     global._io.to(payload.currentPeerSocketId).emit('receiving returned signal', {
       signal: payload.currentPeerSignal,
       id: socket.id,
@@ -46,29 +46,19 @@ const connection = (socket) => {
   socket.on('disconnect', () => {
     // getting the room array with all the participants
     const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
-    console.log(`current room users before delete left user: ${room}`);
-    if (room) {
+    let usersInThisRoom = users[roomID];
+    console.log(`current user left with id: ${socket.id}`);
+    console.log(`current room users before delete left user: ${usersInThisRoom}`);
+    if (usersInThisRoom) {
       // finding the person who left the room
       // creating a new array with the remaining people
-      room = room.filter((id) => id !== socket.id);
-      users[roomID] = room;
+      usersInThisRoom = usersInThisRoom.filter((id) => id !== socket.id);
+      users[roomID] = usersInThisRoom;
     }
-    console.log(`current room users after delete left user: ${room}`);
-
+    console.log(`current room users after delete left user: ${usersInThisRoom}`);
     // emiting a signal and sending it to everyone that a user left
-    socket.to(room).emit('user left', socket.id);
+    socket.to(roomID).emit('user left', { userLeft: socket.id, usersInThisRoom });
   });
-
-  //Image uploading
-  socket.on('submitImg', (filePreview) => {
-    const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
-    console.log('Client sent image' + filePreview)
-    //Client submit an image
-    socket.to(room).emit('sentImg', filePreview) //the server send the image src to all clients
-    socket.emit('sentImg', filePreview);
-  })
 };
 
 module.exports = { connection };

@@ -175,6 +175,14 @@ export const Room = (props) => {
       props.peer.on("stream", (stream) => {
         ref.current.srcObject = stream;
       });
+
+      console.log("PeerID", props.peerID);
+
+      props.peer.on("close", function () {
+        ref.current.pause();
+        ref.current.removeAttribute("src");
+        ref.current.load();
+      });
     }, []);
 
     return <video class="groupVideo" playsInline autoPlay ref={ref} />;
@@ -329,6 +337,9 @@ export const Room = (props) => {
           socketRef.current.emit("join room group", meetingRoomId);
         });
       });
+    return () => {
+      socketRef.current.disconnect();
+    };
   }, []);
 
   // creating a peer object for newly joined user
@@ -450,7 +461,12 @@ export const Room = (props) => {
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
           return (
-            <Video class="groupVideo" key={peer.peerID} peer={peer.peer} />
+            <Video
+              class="groupVideo"
+              key={peer.peerID}
+              peer={peer.peer}
+              peerID={peer.peerID}
+            />
           );
         })}
       </div>
