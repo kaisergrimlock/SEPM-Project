@@ -57,7 +57,7 @@ const connection = (socket) => {
     }
     console.log(`current room users after delete left user: ${usersInThisRoom}`);
     // emiting a signal and sending it to everyone that a user left
-    socket.to(roomID).emit('user left', { userLeft: socket.id, usersInThisRoom });
+    socket.to(roomID).emit('user left', { userLeft: socket.id });
   });
 };
 
