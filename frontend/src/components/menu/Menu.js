@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 export const Menu = (props) => {
   const { isScrolled, handleCollaboration } = props;
-  let { user, logoutUser } = useContext(AuthContext);
+  let { user, logoutUser, name } = useContext(AuthContext);
   return (
     <div className="menu inline-flex justify-between text-center w-full">
       <div
@@ -86,11 +86,10 @@ export const Menu = (props) => {
             <>
               <li className="mx-5">
                 <Link
-                  to="/"
+                  to="/dashboard"
                   className="hover:opacity-70 duration-300 py-5 inline-flex justify-center items-center w-[80px] h-[50px] rounded-md bg-red-500"
-                  onClick={logoutUser}
                 >
-                  Logout
+                  {name}
                 </Link>
               </li>
             </>
