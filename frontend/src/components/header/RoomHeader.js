@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { DisplaySvg } from "../displaySvg/DisplaySvg";
 import { NavButtons } from "../room/NavButtons";
 import recording from "../../assets/svg/recording.svg";
+import { useParams } from "react-router";
 export const RoomHeader = (props) => {
   const { handleImages, handleHangUp, toggleAudio } = props;
   const [isRecorded, setIsRecorded] = useState(false);
@@ -16,6 +17,7 @@ export const RoomHeader = (props) => {
     setIsMuted((state) => !state);
   };
 
+  const { meetingRoomId } = useParams();
   return (
     <header className="bg-navy flex items-center py-3 px-5 justify-between text-white">
       <span className="flex gap-4 items-center">
@@ -28,7 +30,7 @@ export const RoomHeader = (props) => {
         00:00:00{" "}
       </span>
       <span className="sm:block hidden mx-5">
-        Meeting room - ({props.meetingRoomId})
+        Meeting room - ({meetingRoomId})
       </span>
       <NavButtons
         isRecorded={isRecorded}

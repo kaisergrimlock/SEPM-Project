@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 export const PhoneMenu = (props) => {
-  let { user, logoutUser } = useContext(AuthContext);
+  let { user, logoutUser, name } = useContext(AuthContext);
   const { isClicked, handleCollaboration } = props;
   return (
     <aside className="aside">
@@ -55,11 +55,10 @@ export const PhoneMenu = (props) => {
                 </li>
                 <li>
                   <Link
-                    to="/"
+                    to="/dashboard"
                     className="hover:opacity-50 duration-300 py-5 block w-full"
-                    onClick={logoutUser}
                   >
-                    Logout
+                    {name}
                   </Link>
                 </li>
               </>
