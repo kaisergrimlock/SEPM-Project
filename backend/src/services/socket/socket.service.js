@@ -54,11 +54,10 @@ const connection = (socket) => {
       room = room.filter((id) => id !== socket.id);
       users[roomID] = room;
     }
-    // Reset current users and socketToRoom and establish connection between them again
-    users = {};
-    socketToRoom = {};
+    console.log(`current room users after delete left user: ${room}`);
+
     // emiting a signal and sending it to everyone that a user left
-    socket.to(roomID).emit('user left', { userLeft: socket.id });
+    socket.to(room).emit('user left', socket.id);
   });
 
   //Image uploading

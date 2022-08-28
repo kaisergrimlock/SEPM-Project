@@ -175,9 +175,6 @@ export const Room = (props) => {
       props.peer.on("stream", (stream) => {
         ref.current.srcObject = stream;
       });
-
-      console.log("PeerID", props.peerID);
-      console.log("Peer", props.peer);
     }, []);
 
     return <video class="groupVideo" playsInline autoPlay ref={ref} />;
