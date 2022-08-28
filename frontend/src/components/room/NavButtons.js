@@ -5,7 +5,7 @@ import stop from "../../assets/svg/stop.svg";
 import microphone from "../../assets/svg/microphone.svg";
 import muted from "../../assets/svg/muted.svg";
 import upload from "../../assets/svg/upload.svg";
-import { Link } from "react-router-dom";
+
 export const NavButtons = (props) => {
   const {
     isMuted,
