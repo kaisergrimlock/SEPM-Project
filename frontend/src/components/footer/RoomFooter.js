@@ -104,7 +104,7 @@ export const RoomFooter = (props) => {
           <button 
             onClick={() => {
               canvasRef.current.exportImage('png').then(data => {
-                //QRCode.toDataURL(data).then(setSrc)
+                //
                 console.log(data)
                 var image = new Image();
                 image.src = data;
@@ -124,10 +124,13 @@ export const RoomFooter = (props) => {
                   method: 'post',
                   body: fileData
                 }).then(response => response.json())
-                  .then(data => console.log('Success:', data))
-                  .then(data => console.log(data.url))
+                  .then(data => {
+                    console.log('Success:', data)
+                    console.log(data.secure_url)
+                    QRCode.toDataURL(data.secure_url).then(setSrc)
+                  })
                   .catch(err => console.error('Error:', err));
-
+                
               }).catch(e => {
                 console.log(e)
               })
