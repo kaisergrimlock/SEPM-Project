@@ -5,7 +5,7 @@ import Peer from "simple-peer";
 import { RoomHeader } from "../header/RoomHeader";
 // import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
-import { ReactMediaRecorder } from "react-media-recorder";
+import { useReactMediaRecorder } from "react-media-recorder";
 
 export const Room = (props) => {
   const [images, setImages] = useState([]);
@@ -323,7 +323,7 @@ export const Room = (props) => {
     return () => {
       socketRef.current.disconnect();
     };
-  }, []);
+  }, [currentImage ,images]);
 
   // creating a peer object for newly joined user
   function createOtherPeer(
@@ -419,6 +419,8 @@ export const Room = (props) => {
   console.log(peersRef.current);
   console.log(peers);
 
+  const { status, startRecording, stopRecording, mediaBlobUrl } =
+    useReactMediaRecorder({ video: true });
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
       <RoomHeader
@@ -426,20 +428,13 @@ export const Room = (props) => {
         handleImages={handleImages}
         handleHangUp={handleHangUp}
         toggleAudio={toggleAudio}
+        startRecording = {startRecording}
+        stopRecording = {stopRecording}
+        mediaBlobUrl = {mediaBlobUrl}
       />
-        <div>
-        <ReactMediaRecorder
-          screen
-          render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
-            <div>
-              <p>{status}</p>
-              <button onClick={startRecording}>Start Recording</button>
-              <button onClick={stopRecording}>Stop Recording</button>
-              <video src={mediaBlobUrl} controls autoPlay loop />
-            </div>
-          )}
-        />
-      </div>
+      <div>
+      <video src={mediaBlobUrl} controls autoPlay loop />
+    </div>
       <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
@@ -453,6 +448,7 @@ export const Room = (props) => {
           );
         })}
       </div>
+      
       <RoomContent
         currentImage={currentImage}
         images={images}
@@ -460,6 +456,8 @@ export const Room = (props) => {
         colorPicked={colorPicked}
         onChangeColorPicked={onChangeColorPicked}
       />
+
+<a className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300" href={mediaBlobUrl} target='_blank'>Link to video</a>
     </div>
   );
   // (

@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DisplaySvg } from "../displaySvg/DisplaySvg";
 import { NavButtons } from "../room/NavButtons";
 import recording from "../../assets/svg/recording.svg";
 import { useParams } from "react-router";
 export const RoomHeader = (props) => {
-  const { handleImages, handleHangUp, toggleAudio } = props;
+  const { handleImages, handleHangUp, toggleAudio, startRecording, stopRecording, mediaBlobUrl } = props;
   const [isRecorded, setIsRecorded] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-
+  const [isMuted, setIsMuted] = useState(false); 
   const handleRecorded = () => {
     setIsRecorded((state) => !state);
+    if (isRecorded){
+      stopRecording()
+    } else{
+      startRecording()
+    }
   };
 
   const handleMicrophone = () => {
@@ -40,6 +44,7 @@ export const RoomHeader = (props) => {
         handleImages={handleImages}
         handleHangUp={handleHangUp}
       />
+
     </header>
   );
 };
