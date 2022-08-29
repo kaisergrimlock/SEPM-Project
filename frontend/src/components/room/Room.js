@@ -448,6 +448,7 @@ export const Room = (props) => {
           );
         })}
       </div>
+      
       <RoomContent
         currentImage={currentImage}
         images={images}
@@ -455,6 +456,8 @@ export const Room = (props) => {
         colorPicked={colorPicked}
         onChangeColorPicked={onChangeColorPicked}
       />
+
+<a className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300" href={mediaBlobUrl} target='_blank'>Link to video</a>
     </div>
   );
   // (
