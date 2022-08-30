@@ -8,6 +8,7 @@ import pinkPencil from "../../assets/svg/pinkPencil.svg";
 import eraser from "../../assets/svg/eraser.svg";
 import {useState, useEffect} from 'react'
 import QRCode from 'qrcode';
+import jsPDF from 'jspdf';
 
 export const RoomFooter = (props) => {
   const { onChangeColorPicked, canvasRef} = props;
@@ -104,14 +105,18 @@ export const RoomFooter = (props) => {
           <button 
             onClick={() => {
               canvasRef.current.exportImage('png').then(data => {
-                //
-                console.log(data)
+                //image
                 var image = new Image();
                 image.src = data;
-                console.log(image.outerHTML)
-                var w = window.open("about: image");
-                w.document.write(image.outerHTML);
-                w.document.close();
+                //console.log(image.outerHTML)
+                // var w = window.open("about: image");
+                // w.document.write(image.outerHTML);
+                // w.document.close();
+
+                const doc = new jsPDF();
+                doc.addImage(image.src, 'jpg', 0, 0, 150, 150, 'image', 'FAST', 0)
+                const pdfURL = doc.output("bloburl");
+                var w2 = window.open(pdfURL);
 
                 //Cloudinary 
                 const API_ENDPOINT = 'https://api.cloudinary.com/v1_1/dzicvcojs/upload';
