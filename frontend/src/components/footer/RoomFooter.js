@@ -108,15 +108,15 @@ export const RoomFooter = (props) => {
                 //image
                 var image = new Image();
                 image.src = data;
-                //console.log(image.outerHTML)
-                // var w = window.open("about: image");
-                // w.document.write(image.outerHTML);
-                // w.document.close();
+                console.log(image.outerHTML)
+                var w = window.open("about: image");
+                w.document.write(image.outerHTML);
+                w.document.close();
 
-                const doc = new jsPDF();
-                doc.addImage(image.src, 'jpg', 0, 0, 150, 150, 'image', 'FAST', 0)
-                const pdfURL = doc.output("bloburl");
-                var w2 = window.open(pdfURL);
+                // const doc = new jsPDF();
+                // doc.addImage(image.src, 'jpg', 0, 0, 150, 150, 'image', 'FAST', 0)
+                // const pdfURL = doc.output("bloburl");
+                // var w2 = window.open(pdfURL);
 
                 //Cloudinary 
                 const API_ENDPOINT = 'https://api.cloudinary.com/v1_1/dzicvcojs/upload';
@@ -145,6 +145,23 @@ export const RoomFooter = (props) => {
             className="bg-red-500 text-white h-[50px] px-5 rounded-md"
           >
             Download
+          </button>
+          <button
+            onClick={() => {
+              canvasRef.current.exportImage('png').then(data => {
+                var image = new Image();
+                image.src = data;
+                const doc = new jsPDF();
+                doc.addImage(image.src, 'jpg', 0, 0, 150, 150, 'image', 'FAST', 0)
+                const pdfURL = doc.output("bloburl");
+                var w2 = window.open(pdfURL);
+
+              }).catch(e => {
+                console.log(e)
+              })
+            }}
+          >
+            PDF
           </button>
         </div>
         <div>
