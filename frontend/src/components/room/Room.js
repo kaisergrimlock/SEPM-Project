@@ -200,7 +200,23 @@ export const Room = (props) => {
   //Images
   let handleImages = (e) => {
     const filePreview = URL.createObjectURL(e.target.files[0]);
-    socketRef.current.emit('submitImg', filePreview);
+    const API_ENDPOINT = "https://api.cloudinary.com/v1_1/dzicvcojs/upload";
+
+    const fileData = new FormData();
+    fileData.append("file", filePreview);
+    fileData.append("upload_preset", "rx60o1gn"); // upload preset
+
+    fetch(API_ENDPOINT, {
+      method: "post",
+      body: fileData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        console.log(data.secure_url);
+        socketRef.current.emit("submitImg", data.secure_url);
+      })
+      .catch((err) => console.error("Error:", err));
   };
 
   useEffect(() => {
@@ -216,23 +232,17 @@ export const Room = (props) => {
 
         socketRef.current.emit("join room group", meetingRoomId);
 
-        
         //Get image
-        socketRef.current.on('sentImg', (filePreview) => {
-          console.log('image preview' + filePreview);
+        socketRef.current.on("sentImg", (filePreview) => {
+          console.log("image preview" + filePreview);
           setCurrentImage(filePreview);
           setImages((prevImage) => [...prevImage, filePreview]);
-        })
+        });
 
-        socketRef.current.on('newUserImage', (imgArray) => {
-          for(let i = 0; i < imgArray.length; i++){
-            if(currentImage === ""){
-              setCurrentImage(imgArray[i]);
-              console.log(imgArray[i]);
-              setImages((prevImage) => [...prevImage, imgArray[i]]);
-            }
-          }
-        })
+        socketRef.current.on("newUserImage", (imgArray) => {
+          setCurrentImage(imgArray[0]);
+          setImages(imgArray);
+        });
 
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
 
@@ -330,10 +340,10 @@ export const Room = (props) => {
           socketRef.current.emit("join room group", meetingRoomId);
         });
       });
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [currentImage ,images]);
+    // return () => {
+    //   socketRef.current.disconnect();
+    // };
+  }, [currentImage, images]);
 
   // creating a peer object for newly joined user
   function createOtherPeer(
@@ -352,7 +362,7 @@ export const Room = (props) => {
     otherPeer.on("error", function (err) {
       console.log("err: ", err);
     });
-    
+
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(
@@ -399,7 +409,6 @@ export const Room = (props) => {
     return currentPeer;
   }
 
-
   // Toggle Video
   // let isVideo = true;
   // let colorVideo = "#bc1823";
@@ -438,13 +447,13 @@ export const Room = (props) => {
         handleImages={handleImages}
         handleHangUp={handleHangUp}
         toggleAudio={toggleAudio}
-        startRecording = {startRecording}
-        stopRecording = {stopRecording}
-        mediaBlobUrl = {mediaBlobUrl}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+        mediaBlobUrl={mediaBlobUrl}
       />
       <div>
-      <video src={mediaBlobUrl} controls autoPlay loop />
-    </div>
+        <video src={mediaBlobUrl} controls autoPlay loop />
+      </div>
       <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
@@ -458,7 +467,7 @@ export const Room = (props) => {
           );
         })}
       </div>
-      
+
       <RoomContent
         currentImage={currentImage}
         images={images}
@@ -467,7 +476,13 @@ export const Room = (props) => {
         onChangeColorPicked={onChangeColorPicked}
       />
 
-<a className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300" href={mediaBlobUrl} target='_blank'>Link to video</a>
+      <a
+        className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300"
+        href={mediaBlobUrl}
+        target="_blank"
+      >
+        Link to video
+      </a>
     </div>
   );
   // (

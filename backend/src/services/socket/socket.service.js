@@ -1,7 +1,7 @@
 // room object to store the created room IDs
 let users = {};
 let socketToRoom = {};
-let imgArray = [];
+const imgArray = [];
 
 const connection = (socket) => {
   /* ------ CREATING AND JOINING ROOMS FOR CONNECTION BETWEEN USERS ------ */
@@ -16,8 +16,8 @@ const connection = (socket) => {
       users[roomID] = [socket.id];
     }
     console.log('current users in all rooms: ', users);
-    console.log(imgArray);
-    socket.emit('newUserImage',imgArray);
+    // send current images tno new joined user
+    if (imgArray.length !== 0) global._io.to(socket.id).emit('newUserImage', imgArray);
 
     // returning new room with all the attendees after new attendee joined
     socketToRoom[socket.id] = roomID;
@@ -69,11 +69,9 @@ const connection = (socket) => {
   // Image uploading
   socket.on('submitImg', (filePreview) => {
     const roomID = socketToRoom[socket.id];
-    const room = users[roomID];
     console.log('Client sent image', filePreview);
     // Client submit an image
-    socket.to(room).emit('sentImg', filePreview);
-    socket.emit('sentImg', filePreview);
+    socket.to(roomID).emit('sentImg', filePreview);
     imgArray.push(filePreview);
   });
 };
