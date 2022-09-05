@@ -199,13 +199,30 @@ export const Room = (props) => {
   const [usersInRoom, setUsersInRoom] = useState([])
   //Images
   let handleImages = (e) => {
-    const filePreview = URL.createObjectURL(e.target.files[0]);
-    socketRef.current.emit('submitImg', filePreview);
+    const filePreview = e.target.files[0];
+    const API_ENDPOINT = "https://api.cloudinary.com/v1_1/dzicvcojs/upload";
+
+    const fileData = new FormData();
+    fileData.append("file", filePreview);
+    fileData.append("upload_preset", "rx60o1gn"); // upload preset
+
+    fetch(API_ENDPOINT, {
+      method: "post",
+      body: fileData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        console.log(data.secure_url);
+        socketRef.current.emit("submitImg", data.secure_url);
+        setCurrentImage(data.secure_url);
+        setImages((prevImage) => [...prevImage, data.secure_url]);
+      })
+      .catch((err) => console.error("Error:", err));
   };
 
   useEffect(() => {
     socketRef.current = io.connect("/");
-
     // asking for audio and video access
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: videoConstraints })
@@ -216,16 +233,18 @@ export const Room = (props) => {
 
         socketRef.current.emit("join room group", meetingRoomId);
 
-        
-        //Get image
-        socketRef.current.on('sentImg', (filePreview) => {
-          console.log('image preview' + filePreview);
-          setCurrentImage(filePreview);
-          setImages((prevImage) => [...prevImage, filePreview]);
-        })
-
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
+        //  //Get image
+        //  socketRef.current.on("sentImg", (filePreview) => {
+        //   console.log("image preview", filePreview);
+        //   setCurrentImage(filePreview);
+        //   setImages((prevImage) => [...prevImage, filePreview]);
+        // });
 
+        // socketRef.current.on("newUserImage", (imgArray) => {
+        //   setCurrentImage(imgArray[0]);
+        //   setImages(imgArray);
+        // });
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
           if (users[meetingRoomId].length > 1) {
@@ -321,10 +340,24 @@ export const Room = (props) => {
           socketRef.current.emit("join room group", meetingRoomId);
         });
       });
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [currentImage ,images]);
+    // return () => {
+    //   socketRef.current.disconnect();
+    // };
+  }, []);
+
+  useEffect(() => {
+    //Get image
+    socketRef.current.on("sentImg", (filePreview) => {
+      console.log("image preview", filePreview);
+      setCurrentImage(filePreview);
+      setImages((prevImage) => [...prevImage, filePreview]);
+    });
+
+    socketRef.current.on("newUserImage", (imgArray) => {
+      setCurrentImage(imgArray[imgArray.length - 1]);
+      setImages(imgArray);
+    });
+  }, []);
 
   // creating a peer object for newly joined user
   function createOtherPeer(
@@ -343,7 +376,7 @@ export const Room = (props) => {
     otherPeer.on("error", function (err) {
       console.log("err: ", err);
     });
-    
+
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(
@@ -390,7 +423,6 @@ export const Room = (props) => {
     return currentPeer;
   }
 
-
   // Toggle Video
   // let isVideo = true;
   // let colorVideo = "#bc1823";
@@ -433,11 +465,13 @@ export const Room = (props) => {
         toggleAudio={toggleAudio}
         startRecording={startRecording}
         stopRecording={stopRecording}
+
       />
-      {/* <div>
+      <div>
         <video src={mediaBlobUrl} controls autoPlay loop />
-      </div> */}
-      <div class="videos hidden">
+      </div> 
+     
+      <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
           return (
@@ -449,7 +483,7 @@ export const Room = (props) => {
           );
         })}
       </div>
-      
+
       <RoomContent
         users={usersInRoom}
         currentImage={currentImage}
