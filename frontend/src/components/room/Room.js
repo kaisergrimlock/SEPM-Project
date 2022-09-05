@@ -180,7 +180,7 @@ export const Room = (props) => {
       console.log("Peer", props.peer);
     }, []);
 
-    return <video class="groupVideo" playsInline autoPlay ref={ref} />;
+    return <video className="groupVideo" playsInline autoPlay ref={ref} />;
   };
 
   // setting the constraints of video box
@@ -196,7 +196,7 @@ export const Room = (props) => {
   const peersRef = useRef([]);
   const userStream = useRef();
   const meetingRoomId = props.meetingRoomId;
-
+  const [usersInRoom, setUsersInRoom] = useState([])
   //Images
   let handleImages = (e) => {
     const filePreview = URL.createObjectURL(e.target.files[0]);
@@ -265,10 +265,11 @@ export const Room = (props) => {
                 peersRef.current
               );
             }
-
+            setUsersInRoom(users[meetingRoomId])
             setPeers(peers);
           }
         });
+
 
         // sending signal to existing users after new user joined
         socketRef.current.on("new peer joined", (payload) => {
@@ -418,29 +419,29 @@ export const Room = (props) => {
 
   console.log(peersRef.current);
   console.log(peers);
+  console.log(usersInRoom)
 
   const { status, startRecording, stopRecording, mediaBlobUrl } =
-    useReactMediaRecorder({ video: true });
+    useReactMediaRecorder({ screen: true });
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
+      {/* <p>{status}</p> */}
       <RoomHeader
         meetingRoomId={meetingRoomId}
         handleImages={handleImages}
         handleHangUp={handleHangUp}
         toggleAudio={toggleAudio}
-        startRecording = {startRecording}
-        stopRecording = {stopRecording}
-        mediaBlobUrl = {mediaBlobUrl}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
       />
-      <div>
-      <video src={mediaBlobUrl} controls autoPlay loop />
-    </div>
-      <div class="videos">
+      {/* <div>
+        <video src={mediaBlobUrl} controls autoPlay loop />
+      </div> */}
+      <div class="videos hidden">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
           return (
             <Video
-              class="groupVideo"
               key={peer.peerID}
               peer={peer.peer}
               peerID={peer.peerID}
@@ -450,14 +451,14 @@ export const Room = (props) => {
       </div>
       
       <RoomContent
+        users={usersInRoom}
         currentImage={currentImage}
         images={images}
         handleClickedImage={handleClickedImage}
         colorPicked={colorPicked}
         onChangeColorPicked={onChangeColorPicked}
+        linkDownload={mediaBlobUrl}
       />
-
-<a className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300" href={mediaBlobUrl} target='_blank'>Link to video</a>
     </div>
   );
   // (

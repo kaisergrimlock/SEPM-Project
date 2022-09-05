@@ -6,7 +6,7 @@ export const User = ({username,talk}) => {
         <div className="flex justify-center pt-5">
             <img src="https://thuvienplus.com/themes/cynoebook/public/images/default-user-image.png" className="object-scale-down rounded-full w-[50px] h-[50px]"/>
         </div>
-        <span className="text-center py-3 px-2 w-full inline-block text-white">{username}</span>
+        <span className="text-center py-3 px-2 w-full inline-block text-white break-words">Guest_{username}</span>
     </div>
   )
 }
