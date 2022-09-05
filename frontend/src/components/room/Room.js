@@ -199,7 +199,7 @@ export const Room = (props) => {
 
   //Images
   let handleImages = (e) => {
-    const filePreview = URL.createObjectURL(e.target.files[0]);
+    const filePreview = e.target.files[0];
     const API_ENDPOINT = "https://api.cloudinary.com/v1_1/dzicvcojs/upload";
 
     const fileData = new FormData();
@@ -215,13 +215,14 @@ export const Room = (props) => {
         console.log("Success:", data);
         console.log(data.secure_url);
         socketRef.current.emit("submitImg", data.secure_url);
+        setCurrentImage(data.secure_url);
+        setImages((prevImage) => [...prevImage, data.secure_url]);
       })
       .catch((err) => console.error("Error:", err));
   };
 
   useEffect(() => {
     socketRef.current = io.connect("/");
-
     // asking for audio and video access
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: videoConstraints })
@@ -232,20 +233,18 @@ export const Room = (props) => {
 
         socketRef.current.emit("join room group", meetingRoomId);
 
-        //Get image
-        socketRef.current.on("sentImg", (filePreview) => {
-          console.log("image preview" + filePreview);
-          setCurrentImage(filePreview);
-          setImages((prevImage) => [...prevImage, filePreview]);
-        });
-
-        socketRef.current.on("newUserImage", (imgArray) => {
-          setCurrentImage(imgArray[0]);
-          setImages(imgArray);
-        });
-
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
+        //  //Get image
+        //  socketRef.current.on("sentImg", (filePreview) => {
+        //   console.log("image preview", filePreview);
+        //   setCurrentImage(filePreview);
+        //   setImages((prevImage) => [...prevImage, filePreview]);
+        // });
 
+        // socketRef.current.on("newUserImage", (imgArray) => {
+        //   setCurrentImage(imgArray[0]);
+        //   setImages(imgArray);
+        // });
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
           if (users[meetingRoomId].length > 1) {
@@ -343,7 +342,21 @@ export const Room = (props) => {
     // return () => {
     //   socketRef.current.disconnect();
     // };
-  }, [currentImage, images]);
+  }, []);
+
+  useEffect(() => {
+    //Get image
+    socketRef.current.on("sentImg", (filePreview) => {
+      console.log("image preview", filePreview);
+      setCurrentImage(filePreview);
+      setImages((prevImage) => [...prevImage, filePreview]);
+    });
+
+    socketRef.current.on("newUserImage", (imgArray) => {
+      setCurrentImage(imgArray[imgArray.length - 1]);
+      setImages(imgArray);
+    });
+  }, []);
 
   // creating a peer object for newly joined user
   function createOtherPeer(
