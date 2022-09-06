@@ -6,15 +6,14 @@ import microphone from "../../assets/svg/microphone.svg";
 import muted from "../../assets/svg/muted.svg";
 import upload from "../../assets/svg/upload.svg";
 
-export const NavButtons = (props) => {
-  const {
-    isMuted,
-    isRecorded,
-    handleRecorded,
-    handleMicrophone,
-    handleImages,
-    handleHangUp,
-  } = props;
+export const NavButtons = ({
+  isMuted,
+  isRecorded,
+  handleRecorded,
+  handleMicrophone,
+  handleImages,
+  handleHangUp,
+}) => {
 
   return (
     <div className="flex gap-4 items-center">
