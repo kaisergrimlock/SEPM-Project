@@ -180,7 +180,7 @@ export const Room = (props) => {
       console.log("Peer", props.peer);
     }, []);
 
-    return <video class="groupVideo" playsInline autoPlay ref={ref} />;
+    return <video className="groupVideo" playsInline autoPlay ref={ref} />;
   };
 
   // setting the constraints of video box
@@ -196,16 +196,33 @@ export const Room = (props) => {
   const peersRef = useRef([]);
   const userStream = useRef();
   const meetingRoomId = props.meetingRoomId;
-
+  const [usersInRoom, setUsersInRoom] = useState([])
   //Images
   let handleImages = (e) => {
-    const filePreview = URL.createObjectURL(e.target.files[0]);
-    socketRef.current.emit('submitImg', filePreview);
+    const filePreview = e.target.files[0];
+    const API_ENDPOINT = "https://api.cloudinary.com/v1_1/dzicvcojs/upload";
+
+    const fileData = new FormData();
+    fileData.append("file", filePreview);
+    fileData.append("upload_preset", "rx60o1gn"); // upload preset
+
+    fetch(API_ENDPOINT, {
+      method: "post",
+      body: fileData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        console.log(data.secure_url);
+        socketRef.current.emit("submitImg", data.secure_url);
+        setCurrentImage(data.secure_url);
+        setImages((prevImage) => [...prevImage, data.secure_url]);
+      })
+      .catch((err) => console.error("Error:", err));
   };
 
   useEffect(() => {
     socketRef.current = io.connect("/");
-
     // asking for audio and video access
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: videoConstraints })
@@ -216,26 +233,18 @@ export const Room = (props) => {
 
         socketRef.current.emit("join room group", meetingRoomId);
 
-        
-        //Get image
-        socketRef.current.on('sentImg', (filePreview) => {
-          console.log('image preview' + filePreview);
-          setCurrentImage(filePreview);
-          setImages((prevImage) => [...prevImage, filePreview]);
-        })
-
-        socketRef.current.on('newUserImage', (imgArray) => {
-          for(let i = 0; i < imgArray.length; i++){
-            if(currentImage === ""){
-              setCurrentImage(imgArray[i]);
-              console.log(imgArray[i]);
-              setImages((prevImage) => [...prevImage, imgArray[i]]);
-            }
-          }
-        })
-
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
+        //  //Get image
+        //  socketRef.current.on("sentImg", (filePreview) => {
+        //   console.log("image preview", filePreview);
+        //   setCurrentImage(filePreview);
+        //   setImages((prevImage) => [...prevImage, filePreview]);
+        // });
 
+        // socketRef.current.on("newUserImage", (imgArray) => {
+        //   setCurrentImage(imgArray[0]);
+        //   setImages(imgArray);
+        // });
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
           if (users[meetingRoomId].length > 1) {
@@ -275,10 +284,11 @@ export const Room = (props) => {
                 peersRef.current
               );
             }
-
+            setUsersInRoom(users[meetingRoomId])
             setPeers(peers);
           }
         });
+
 
         // sending signal to existing users after new user joined
         socketRef.current.on("new peer joined", (payload) => {
@@ -330,10 +340,24 @@ export const Room = (props) => {
           socketRef.current.emit("join room group", meetingRoomId);
         });
       });
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [currentImage ,images]);
+    // return () => {
+    //   socketRef.current.disconnect();
+    // };
+  }, []);
+
+  useEffect(() => {
+    //Get image
+    socketRef.current.on("sentImg", (filePreview) => {
+      console.log("image preview", filePreview);
+      setCurrentImage(filePreview);
+      setImages((prevImage) => [...prevImage, filePreview]);
+    });
+
+    socketRef.current.on("newUserImage", (imgArray) => {
+      setCurrentImage(imgArray[imgArray.length - 1]);
+      setImages(imgArray);
+    });
+  }, []);
 
   // creating a peer object for newly joined user
   function createOtherPeer(
@@ -428,29 +452,31 @@ export const Room = (props) => {
 
   console.log(peersRef.current);
   console.log(peers);
+  console.log(usersInRoom)
 
   const { status, startRecording, stopRecording, mediaBlobUrl } =
-    useReactMediaRecorder({ video: true });
+    useReactMediaRecorder({ screen: true });
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
+      {/* <p>{status}</p> */}
       <RoomHeader
         meetingRoomId={meetingRoomId}
         handleImages={handleImages}
         handleHangUp={handleHangUp}
         toggleAudio={toggleAudio}
-        startRecording = {startRecording}
-        stopRecording = {stopRecording}
-        mediaBlobUrl = {mediaBlobUrl}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+
       />
       <div>
-      <video src={mediaBlobUrl} controls autoPlay loop />
-    </div>
+        <video src={mediaBlobUrl} controls autoPlay loop />
+      </div> 
+     
       <div class="videos">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
           return (
             <Video
-              class="groupVideo"
               key={peer.peerID}
               peer={peer.peer}
               peerID={peer.peerID}
@@ -460,14 +486,14 @@ export const Room = (props) => {
       </div>
       
       <RoomContent
+        users={usersInRoom}
         currentImage={currentImage}
         images={images}
         handleClickedImage={handleClickedImage}
         colorPicked={colorPicked}
         onChangeColorPicked={onChangeColorPicked}
+        linkDownload={mediaBlobUrl}
       />
-
-<a className="w-[100px] h-[40px] bg-red-500 text-white rounded-[10px] inline-flex justify-center items-center hover:opacity-70 duration-300" href={mediaBlobUrl} target='_blank'>Link to video</a>
     </div>
   );
   // (
