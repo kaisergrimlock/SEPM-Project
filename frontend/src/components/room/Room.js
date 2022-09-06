@@ -1,9 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
-// import { RoomFooter } from "../footer/RoomFooter";
 import { RoomHeader } from "../header/RoomHeader";
-// import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
 import { useReactMediaRecorder } from "react-media-recorder";
 
@@ -217,6 +215,7 @@ export const Room = (props) => {
         socketRef.current.emit("submitImg", data.secure_url);
         setCurrentImage(data.secure_url);
         setImages((prevImage) => [...prevImage, data.secure_url]);
+        console.log("images:"+ images)
       })
       .catch((err) => console.error("Error:", err));
   };
