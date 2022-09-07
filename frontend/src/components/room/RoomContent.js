@@ -17,7 +17,7 @@ export const RoomContent = ({users, images, currentImage, handleClickedImage, co
       <div className="w-full h-[92vh] overflow-hidden">
         <Whiteboard canvasRef={canvasRef} image={currentImage} colorPicked={colorPicked}/>
 
-        <RoomFooter canvasRef={canvasRef} onChangeColorPicked ={onChangeColorPicked} linkDownload={linkDownload}/>
+        <RoomFooter canvasRef={canvasRef} onChangeColorPicked ={onChangeColorPicked} linkDownload={linkDownload} images={images}/>
       </div>
 
       <div className="w-1/5 h-[92vh] bg-lightBlack overflow-y-scroll ">
