@@ -40,8 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // set security http headers
-app.use(helmet());
-
+app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 // CORS for server and client communication
 app.use(
   cors({
