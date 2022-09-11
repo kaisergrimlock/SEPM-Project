@@ -107,7 +107,7 @@ app.use(globalErrorHandler);
 // running
 // Connect to Mongoose
 mongoose
-  .connect(process.env.DATABASE)
+  .connect('mongodb+srv://Khoi:1234@cluster0.owhumte.mongodb.net/dev?retryWrites=true&w=majority')
   .then(() => {
     console.log(`Connecting to Mongoose successfully`);
   })
