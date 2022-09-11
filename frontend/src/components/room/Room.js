@@ -213,6 +213,16 @@ export const Room = (props) => {
           setImages((prevImage) => [...prevImage, filePreview]);
         })
 
+        socketRef.current.on('newUserImage', (imgArray) => {
+          for(let i = 0; i < imgArray.length; i++){
+            if(currentImage === ""){
+              setCurrentImage(imgArray[i]);
+              console.log(imgArray[i]);
+              setImages((prevImage) => [...prevImage, imgArray[i]]);
+            }
+          }
+        })
+
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
 
         // getting other users when new user joining in
