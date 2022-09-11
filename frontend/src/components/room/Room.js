@@ -1,20 +1,25 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import { RoomHeader } from "../header/RoomHeader";
 import { RoomContent } from "./RoomContent";
 import { useReactMediaRecorder } from "react-media-recorder";
+import { VideoList } from "../video/VideoList";
+// import AuthContext from "../../context/AuthContext";
 
 export const Room = (props) => {
+  // const {name} = useContext(AuthContext)
   const [images, setImages] = useState([]);
+
+  let [currentImage, setCurrentImage] = useState("");
+
+  const [colorPicked, setColorPicked] = useState("#6DA8D6");
+
   const handleClickedImage = (id) => {
     setCurrentImage(images[id]);
     // console.log(currentImage)
   };
 
-  let [currentImage, setCurrentImage] = useState("");
-
-  const [colorPicked, setColorPicked] = useState("#6DA8D6");
   const onChangeColorPicked = (e, cursorImage) => {
     setColorPicked(e.target.value);
     document.body.style.cursor = `url(${currentImage})`;
@@ -165,26 +170,11 @@ export const Room = (props) => {
     prev.push(obj);
     return prev;
   }, []);
-  // Streaming Video of the user
-  const Video = (props) => {
-    const ref = useRef();
-
-    useEffect(() => {
-      props.peer.on("stream", (stream) => {
-        ref.current.srcObject = stream;
-      });
-
-      console.log("PeerID", props.peerID);
-      console.log("Peer", props.peer);
-    }, []);
-
-    return <video className="groupVideo" playsInline autoPlay ref={ref} />;
-  };
 
   // setting the constraints of video box
   const videoConstraints = {
-    height: window.innerHeight / 2,
-    width: window.innerWidth / 2,
+    height: window.innerHeight / 4,
+    width: window.innerWidth / 4,
   };
 
   // variables for different functionalities of video call
@@ -246,6 +236,9 @@ export const Room = (props) => {
         // });
         // getting other users when new user joining in
         socketRef.current.on("all users", (users) => {
+          for (let i =0; i < users[meetingRoomId].length; i++){
+            setUsersInRoom(prev => [...prev, users[meetingRoomId][i]])
+          }
           if (users[meetingRoomId].length > 1) {
             const peers = [];
             const otherUsers = users[meetingRoomId].filter(
@@ -283,11 +276,9 @@ export const Room = (props) => {
                 peersRef.current
               );
             }
-            setUsersInRoom(users[meetingRoomId])
             setPeers(peers);
           }
         });
-
 
         // sending signal to existing users after new user joined
         socketRef.current.on("new peer joined", (payload) => {
@@ -453,7 +444,7 @@ export const Room = (props) => {
   console.log(peers);
   console.log(usersInRoom)
 
-  const { status, startRecording, stopRecording, mediaBlobUrl } =
+  const { startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ screen: true });
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
@@ -466,24 +457,9 @@ export const Room = (props) => {
         startRecording={startRecording}
         stopRecording={stopRecording}
 
-      />
-      <div>
-        <video src={mediaBlobUrl} controls autoPlay loop />
-      </div> 
-     
-      <div class="videos">
-        <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
-        {peers.map((peer) => {
-          return (
-            <Video
-              key={peer.peerID}
-              peer={peer.peer}
-              peerID={peer.peerID}
-            />
-          );
-        })}
-      </div>
-      
+  
+      <VideoList userVideo={userVideo} peers={peers}/>
+
       <RoomContent
         users={usersInRoom}
         currentImage={currentImage}
