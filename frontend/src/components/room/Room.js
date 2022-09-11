@@ -1,9 +1,7 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
-// import { RoomFooter } from "../footer/RoomFooter";
 import { RoomHeader } from "../header/RoomHeader";
-// import { NavButtons } from "./NavButtons";
 import { RoomContent } from "./RoomContent";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { VideoList } from "../video/VideoList";
@@ -207,6 +205,7 @@ export const Room = (props) => {
         socketRef.current.emit("submitImg", data.secure_url);
         setCurrentImage(data.secure_url);
         setImages((prevImage) => [...prevImage, data.secure_url]);
+        console.log("images:"+ images)
       })
       .catch((err) => console.error("Error:", err));
   };
@@ -223,26 +222,6 @@ export const Room = (props) => {
 
         socketRef.current.emit("join room group", meetingRoomId);
 
-<<<<<<< HEAD
-        //Get image
-        socketRef.current.on('sentImg', (filePreview) => {
-          console.log('image preview' + filePreview);
-          setCurrentImage(filePreview);
-          setImages((prevImage) => [...prevImage, filePreview]);
-        })
-
-        socketRef.current.on('newUserImage', (imgArray) => {
-          for(let i = 0; i < imgArray.length; i++){
-            if(currentImage === ""){
-              setCurrentImage(imgArray[i]);
-              console.log(imgArray[i]);
-              setImages((prevImage) => [...prevImage, imgArray[i]]);
-            }
-          }
-        })
-
-=======
->>>>>>> 1c2a93bc9f6e5fc67033a3a38f478bc6b393c2ff
         // socketRef.current.on("sentImg", filePreview => console.log('image preview' + filePreview));
         //  //Get image
         //  socketRef.current.on("sentImg", (filePreview) => {
@@ -387,7 +366,7 @@ export const Room = (props) => {
     otherPeer.on("error", function (err) {
       console.log("err: ", err);
     });
-
+    
     otherPeer.on("signal", (currentPeerSignal) => {
       console.log("insde the client otherPeer signal: ", currentPeerSignal);
       console.log(
@@ -434,6 +413,7 @@ export const Room = (props) => {
     return currentPeer;
   }
 
+
   // Toggle Video
   // let isVideo = true;
   // let colorVideo = "#bc1823";
@@ -477,7 +457,6 @@ export const Room = (props) => {
         startRecording={startRecording}
         stopRecording={stopRecording}
 
-      />
   
       <VideoList userVideo={userVideo} peers={peers}/>
 

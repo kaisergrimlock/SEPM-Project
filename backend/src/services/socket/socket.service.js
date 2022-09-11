@@ -70,6 +70,7 @@ const connection = (socket) => {
   // Image uploading
   socket.on('submitImg', (filePreview) => {
     const roomID = socketToRoom[socket.id];
+    const room = users[roomID];
     console.log('Client sent image', filePreview);
 
     console.log(`current image in ${roomID} before get update: `, imageToRoom[roomID]);

@@ -11,7 +11,7 @@ import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 
 export const RoomFooter = (props) => {
-  const { onChangeColorPicked, canvasRef, linkDownload} = props;
+  const { onChangeColorPicked, canvasRef, linkDownload, images} = props;
   const [src, setSrc] = useState("");
 
 
@@ -158,10 +158,18 @@ export const RoomFooter = (props) => {
           <button
             onClick={() => {
               canvasRef.current.exportImage('png').then(data => {
-                var image = new Image();
-                image.src = data;
+
                 const doc = new jsPDF();
-                doc.addImage(image.src, 'jpg', 0, 0, 150, 150, 'image', 'FAST', 0)
+                for(let i = 0; i < images.length; i++) {
+                  var image = new Image();
+                  image.src = images[i];
+                  var alias = image.src;
+                  //console.log('src:' + image.src)
+                  doc.addImage(image.src, 'jpg', 0, 0, 150, 150, {alias}, 'FAST', 0);
+                  if (i !== images.length - 1) {
+                    doc.addPage();
+                  }
+                }
                 const pdfURL = doc.output("bloburl");
                 var w2 = window.open(pdfURL);
 
