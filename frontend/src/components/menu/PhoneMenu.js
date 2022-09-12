@@ -36,7 +36,7 @@ export const PhoneMenu = (props) => {
                   </button>
                 </li>
 
-                <li>
+                {/* <li>
                   <Link
                     to="/"
                     className="hover:opacity-50 duration-300 py-5 block w-full"
@@ -52,7 +52,7 @@ export const PhoneMenu = (props) => {
                   >
                     QR
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     to="/dashboard"
@@ -82,7 +82,7 @@ export const PhoneMenu = (props) => {
                   </Link>
                 </li>
 
-                <li>
+                {/* <li>
                   <Link
                     to="/login"
                     className="hover:opacity-50 duration-300 py-5 block w-full"
@@ -98,7 +98,7 @@ export const PhoneMenu = (props) => {
                   >
                     QR
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link
                     to="/login"

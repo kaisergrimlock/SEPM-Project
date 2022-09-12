@@ -183,8 +183,8 @@ export const Room = (props) => {
 
   // setting the constraints of video box
   const videoConstraints = {
-    height: window.innerHeight / 2,
-    width: window.innerWidth / 2,
+    height: window.innerHeight / 4,
+    width: window.innerWidth / 4,
   };
 
   // variables for different functionalities of video call
@@ -453,7 +453,7 @@ export const Room = (props) => {
   console.log(peers);
   console.log(usersInRoom)
 
-  const { status, startRecording, stopRecording, mediaBlobUrl } =
+  const { startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ screen: true });
   return (
     <div className="w-full h-screen bg-lightBlue2 ">
@@ -467,11 +467,11 @@ export const Room = (props) => {
         stopRecording={stopRecording}
 
       />
-      <div>
+      {/* <div>
         <video src={mediaBlobUrl} controls autoPlay loop />
-      </div> 
+      </div>  */}
      
-      <div class="videos">
+      <div class="videos overflow-y-scroll hidden">
         <video class="groupVideo" muted ref={userVideo} autoPlay playsInline />
         {peers.map((peer) => {
           return (
