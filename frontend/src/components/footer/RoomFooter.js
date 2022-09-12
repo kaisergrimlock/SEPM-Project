@@ -6,7 +6,7 @@ import redPencil from "../../assets/svg/redPencil.svg";
 import yellowPencil from "../../assets/svg/yellowPencil.svg";
 import pinkPencil from "../../assets/svg/pinkPencil.svg";
 import eraser from "../../assets/svg/eraser.svg";
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 
@@ -183,7 +183,7 @@ export const RoomFooter = (props) => {
           </button>
         </div>
         <div>
-            <img src={src}></img>
+            <img src={src} className="h-[50px] w-[50px]"></img>
         </div>
       </div>
     </div>
