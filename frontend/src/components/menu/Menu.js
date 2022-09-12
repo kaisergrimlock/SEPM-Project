@@ -32,7 +32,7 @@ export const Menu = (props) => {
                 </button>
               </li>
 
-              <li className="mx-5">
+              {/* <li className="mx-5">
                 <Link
                   to="/meeting"
                   className="hover:opacity-70 duration-300 py-5 inline-block w-full"
@@ -48,7 +48,7 @@ export const Menu = (props) => {
                 >
                   QR
                 </Link>
-              </li>
+              </li> */}
             </>
           ) : (
             <>
@@ -56,7 +56,7 @@ export const Menu = (props) => {
                 <Link to="/login" className="hover:opacity-70 duration-300 py-5 inline-block w-full bg-none">Collaborate</Link>
               </li>
 
-              <li className="mx-5">
+              {/* <li className="mx-5">
                 <Link
                   to="/login"
                   className="hover:opacity-70 duration-300 py-5 inline-block w-full"
@@ -72,7 +72,7 @@ export const Menu = (props) => {
                 >
                   QR
                 </Link>
-              </li>
+              </li> */}
             </>
           )}
         </ul>
